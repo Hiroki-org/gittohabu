@@ -20,14 +20,20 @@ let isEnabled = true;
  */
 export function setReplaceEntries(entries: ReplaceEntry[]): void {
   // エントリ登録時に正規表現をコンパイルして再利用する
-  compiledEntries = entries.map((entry) => {
-    const flags = entry.caseSensitive === false ? 'gi' : 'g';
-    return {
-      entry,
-      urlPattern: entry.urlPattern ? new RegExp(entry.urlPattern) : undefined,
-      fromPattern: new RegExp(escapeRegExp(entry.from), flags),
-    };
-  });
+  const nextEntries: CompiledReplaceEntry[] = [];
+  for (const entry of entries) {
+    try {
+      const flags = entry.caseSensitive === false ? 'gi' : 'g';
+      nextEntries.push({
+        entry,
+        urlPattern: entry.urlPattern ? new RegExp(entry.urlPattern) : undefined,
+        fromPattern: new RegExp(escapeRegExp(entry.from), flags),
+      });
+    } catch (error) {
+      console.warn('[gittohabu] 置換エントリの正規表現が無効です:', entry, error);
+    }
+  }
+  compiledEntries = nextEntries;
 }
 
 /**
@@ -65,7 +71,7 @@ export function replaceTextNode(node: Text): void {
     if (!replacement) continue;
 
     compiled.fromPattern.lastIndex = 0;
-    const replaced = text.replace(compiled.fromPattern, replacement);
+    const replaced = text.replace(compiled.fromPattern, () => replacement);
     if (replaced !== text) {
       text = replaced;
       modified = true;
@@ -128,5 +134,10 @@ export function replaceTextInElement(element: Element | Document): void {
  * ページ全体を置換
  */
 export function replaceAll(): void {
-  replaceTextInElement(document.body);
+  const rootElement = document.body ?? document.documentElement;
+  if (!rootElement) {
+    console.warn('[gittohabu] 置換対象のルート要素が見つかりません。');
+    return;
+  }
+  replaceTextInElement(rootElement);
 }

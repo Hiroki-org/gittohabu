@@ -17,7 +17,7 @@ async function init(): Promise<void> {
     startObserver();
   }
 
-  // TODO: Hiroki-org/gittohabu#2 ツールチップUI実装と統合
+  // TODO: https://github.com/Hiroki-org/gittohabu/issues/5 ツールチップUI統合（hover設定の再利用）
   document.querySelectorAll('.btn-primary').forEach((btn) => {
     btn.addEventListener('mouseenter', (e: MouseEvent) => {
       if (!(e.ctrlKey || e.metaKey)) {
@@ -46,18 +46,16 @@ function loadEnabledState(): Promise<boolean> {
     try {
       chrome.storage.local.get('gittohabu_enabled', (result) => {
         if (chrome.runtime.lastError) {
-          console.warn('[gittohabu] storage error:', chrome.runtime.lastError);
+          console.warn(
+            '[gittohabu] 設定の読み込みに失敗しました:',
+            chrome.runtime.lastError.message,
+          );
           resolve(true);
           return;
         }
         const stored = result.gittohabu_enabled;
         resolve(typeof stored === 'boolean' ? stored : true);
       });
-    } catch {
-      resolve(true);
-    }
-  });
-}
     } catch {
       resolve(true);
     }

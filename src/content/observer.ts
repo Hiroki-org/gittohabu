@@ -10,7 +10,15 @@ function flushPendingNodes(): void {
     if (node.nodeType === Node.ELEMENT_NODE) {
       replaceTextInElement(node as Element);
     } else if (node.nodeType === Node.TEXT_NODE) {
-      replaceTextNode(node as Text);
+      const textNode = node as Text;
+      const parent = textNode.parentElement;
+      if (
+        parent &&
+        !parent.isContentEditable &&
+        !parent.closest('script,style,textarea,input')
+      ) {
+        replaceTextNode(textNode);
+      }
     }
   }
   pendingNodes.clear();
