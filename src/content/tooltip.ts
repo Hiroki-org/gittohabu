@@ -28,6 +28,11 @@ function calculatePosition(anchor: HTMLElement, tooltip: HTMLElement): TooltipPo
   if (top + tooltipRect.height > viewportHeight - TOOLTIP_OFFSET) {
     top = anchorRect.top - tooltipRect.height - TOOLTIP_OFFSET;
   }
+  if (top < TOOLTIP_OFFSET) {
+    top = TOOLTIP_OFFSET;
+  }
+
+  return { top, left };
 
   return { top, left };
 }
