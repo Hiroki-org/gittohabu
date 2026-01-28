@@ -1,8 +1,10 @@
 import type { Dictionary } from './schema';
 
+const BUILTIN_DICTIONARY_UPDATED_AT = '2026-01-28T00:00:00.000Z';
+
 export const builtinDictionary: Dictionary = {
   version: '0.1.0',
-  updatedAt: new Date().toISOString(),
+  updatedAt: BUILTIN_DICTIONARY_UPDATED_AT,
   entries: [
     // === テキスト置換 ===
     {
@@ -64,7 +66,7 @@ export const builtinDictionary: Dictionary = {
     {
       type: 'hover',
       id: 'hover-merge-btn',
-      selector: 'button.btn-primary',
+      selector: 'button.js-merge-branch-action',
       originalLabel: 'Merge pull request',
       title: { ja: 'プルリクエストをマージ' },
       description: {

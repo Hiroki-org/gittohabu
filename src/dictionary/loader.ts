@@ -1,4 +1,4 @@
-import type { Dictionary, HoverEntry, ReplaceEntry } from './schema';
+import type { Dictionary, DictionaryEntry, HoverEntry, ReplaceEntry } from './schema';
 import { builtinDictionary } from './builtin';
 
 const STORAGE_KEY = 'gittohabu_user_dictionary';
@@ -11,12 +11,16 @@ async function loadUserDictionary(): Promise<Dictionary['entries']> {
     try {
       chrome.storage.local.get(STORAGE_KEY, (result) => {
         if (chrome.runtime.lastError) {
+          console.warn(
+            '[gittohabu] ユーザ辞書の読み込みに失敗しました:',
+            chrome.runtime.lastError.message,
+          );
           resolve([]);
           return;
         }
         const data = result[STORAGE_KEY];
         if (data && Array.isArray(data.entries)) {
-          resolve(data.entries);
+          resolve(data.entries.filter(isDictionaryEntry));
         } else {
           resolve([]);
         }
@@ -25,6 +29,32 @@ async function loadUserDictionary(): Promise<Dictionary['entries']> {
       resolve([]);
     }
   });
+}
+
+function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
+  if (!entry || typeof entry !== 'object') {
+    return false;
+  }
+  const candidate = entry as DictionaryEntry;
+  if (candidate.type === 'replace') {
+    return (
+      typeof candidate.id === 'string' &&
+      typeof candidate.from === 'string' &&
+      candidate.to !== null &&
+      typeof candidate.to === 'object'
+    );
+  }
+  if (candidate.type === 'hover') {
+    return (
+      typeof candidate.id === 'string' &&
+      typeof candidate.selector === 'string' &&
+      candidate.title !== null &&
+      typeof candidate.title === 'object' &&
+      candidate.description !== null &&
+      typeof candidate.description === 'object'
+    );
+  }
+  return false;
 }
 
 /**
