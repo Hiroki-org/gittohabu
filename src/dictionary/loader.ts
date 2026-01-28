@@ -40,21 +40,30 @@ function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
     return (
       typeof candidate.id === 'string' &&
       typeof candidate.from === 'string' &&
-      candidate.to !== null &&
-      typeof candidate.to === 'object'
+      isLocalizedText(candidate.to)
     );
   }
   if (candidate.type === 'hover') {
     return (
       typeof candidate.id === 'string' &&
       typeof candidate.selector === 'string' &&
-      candidate.title !== null &&
-      typeof candidate.title === 'object' &&
-      candidate.description !== null &&
-      typeof candidate.description === 'object'
+      isLocalizedText(candidate.title) &&
+      isLocalizedText(candidate.description)
     );
   }
   return false;
+}
+
+function isLocalizedText(value: unknown): value is DictionaryEntry['type'] extends 'replace'
+  ? DictionaryEntry['to']
+  : DictionaryEntry['type'] extends 'hover'
+    ? DictionaryEntry['title']
+    : never {
+  if (!value || typeof value !== 'object') {
+    return false;
+  }
+  const entries = Object.entries(value as Record<string, unknown>);
+  return entries.length > 0 && entries.every(([, text]) => typeof text === 'string');
 }
 
 /**
@@ -76,7 +85,7 @@ export async function loadDictionary(): Promise<Dictionary> {
 
   return {
     version: builtinDictionary.version,
-    updatedAt: new Date().toISOString(),
+    updatedAt: userEntries.length > 0 ? new Date().toISOString() : builtinDictionary.updatedAt,
     entries: Array.from(mergedMap.values()),
   };
 }

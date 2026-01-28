@@ -38,7 +38,7 @@ export interface ReplaceEntry {
   from: string;
   /** 置換後のテキスト（多言語） */
   to: LocalizedText;
-  /** 大文字小文字を区別するか（デフォルト: true） */
+  /** 大文字小文字を区別するか（未指定時はtrueとして扱う） */
   caseSensitive?: boolean;
   /** 対象ページのURLパターン（オプション） */
   urlPattern?: string;
