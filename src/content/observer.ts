@@ -1,6 +1,20 @@
-import { replaceTextInElement } from './replacer';
+import { replaceTextInElement, replaceTextNode } from './replacer';
 
 let observer: MutationObserver | null = null;
+let pendingNodes = new Set<Node>();
+let scheduled = false;
+
+function flushPendingNodes(): void {
+  scheduled = false;
+  for (const node of pendingNodes) {
+    if (node.nodeType === Node.ELEMENT_NODE) {
+      replaceTextInElement(node as Element);
+    } else if (node.nodeType === Node.TEXT_NODE) {
+      replaceTextNode(node as Text);
+    }
+  }
+  pendingNodes.clear();
+}
 
 /**
  * MutationObserver を開始
@@ -13,16 +27,13 @@ export function startObserver(): void {
     for (const mutation of mutations) {
       // 追加されたノードに対して置換を実行
       for (const node of mutation.addedNodes) {
-        if (node.nodeType === Node.ELEMENT_NODE) {
-          replaceTextInElement(node as Element);
-        } else if (node.nodeType === Node.TEXT_NODE) {
-          // テキストノードが直接追加された場合
-          const parent = node.parentElement;
-          if (parent) {
-            replaceTextInElement(parent);
-          }
-        }
+        pendingNodes.add(node);
       }
+    }
+    if (!scheduled && pendingNodes.size > 0) {
+      scheduled = true;
+      // まとめて処理して高頻度なDOM更新時の負荷を抑える
+      queueMicrotask(flushPendingNodes);
     }
   });
 
@@ -40,4 +51,6 @@ export function stopObserver(): void {
     observer.disconnect();
     observer = null;
   }
+  pendingNodes.clear();
+  scheduled = false;
 }

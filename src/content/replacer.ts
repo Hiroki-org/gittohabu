@@ -3,8 +3,14 @@ import type { ReplaceEntry } from '../dictionary/schema';
 /** 現在の言語設定 */
 let currentLang = 'ja';
 
+type CompiledReplaceEntry = {
+  entry: ReplaceEntry;
+  urlPattern?: RegExp;
+  fromPattern: RegExp;
+};
+
 /** 置換対象のエントリ一覧 */
-let replaceEntries: ReplaceEntry[] = [];
+let compiledEntries: CompiledReplaceEntry[] = [];
 
 /** 置換が有効かどうか */
 let isEnabled = true;
@@ -13,7 +19,15 @@ let isEnabled = true;
  * 置換エントリを設定
  */
 export function setReplaceEntries(entries: ReplaceEntry[]): void {
-  replaceEntries = entries;
+  // エントリ登録時に正規表現をコンパイルして再利用する
+  compiledEntries = entries.map((entry) => {
+    const flags = entry.caseSensitive === false ? 'gi' : 'g';
+    return {
+      entry,
+      urlPattern: entry.urlPattern ? new RegExp(entry.urlPattern) : undefined,
+      fromPattern: new RegExp(escapeRegExp(entry.from), flags),
+    };
+  });
 }
 
 /**
@@ -33,7 +47,7 @@ export function setLanguage(lang: string): void {
 /**
  * 単一のテキストノードに対して置換を実行
  */
-function replaceTextNode(node: Text): void {
+export function replaceTextNode(node: Text): void {
   if (!isEnabled) return;
 
   let text = node.textContent;
@@ -41,22 +55,19 @@ function replaceTextNode(node: Text): void {
 
   let modified = false;
 
-  for (const entry of replaceEntries) {
+  for (const compiled of compiledEntries) {
     // URLパターンがあればチェック
-    if (entry.urlPattern) {
-      const regex = new RegExp(entry.urlPattern);
-      if (!regex.test(window.location.href)) continue;
+    if (compiled.urlPattern && !compiled.urlPattern.test(window.location.href)) {
+      continue;
     }
 
-    const replacement = entry.to[currentLang];
+    const replacement = compiled.entry.to[currentLang];
     if (!replacement) continue;
 
-    // 大文字小文字の区別
-    const flags = entry.caseSensitive === false ? 'gi' : 'g';
-    const pattern = new RegExp(escapeRegExp(entry.from), flags);
-
-    if (pattern.test(text)) {
-      text = text.replace(pattern, replacement);
+    compiled.fromPattern.lastIndex = 0;
+    const replaced = text.replace(compiled.fromPattern, replacement);
+    if (replaced !== text) {
+      text = replaced;
       modified = true;
     }
   }
@@ -92,7 +103,8 @@ export function replaceTextInElement(element: Element | Document): void {
           tagName === 'script' ||
           tagName === 'style' ||
           tagName === 'textarea' ||
-          tagName === 'input'
+          tagName === 'input' ||
+          parent.isContentEditable
         ) {
           return NodeFilter.FILTER_REJECT;
         }
