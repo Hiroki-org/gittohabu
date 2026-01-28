@@ -1,5 +1,6 @@
 import type { DictionaryEntry, HoverEntry, ReplaceEntry } from '../dictionary/schema';
 import { builtinDictionary } from '../dictionary/builtin';
+import { isDictionaryEntry } from '../dictionary/loader';
 
 type EntryKind = DictionaryEntry['type'];
 
@@ -13,6 +14,7 @@ const cancelEditButton = document.getElementById('cancel-edit') as HTMLButtonEle
 const entryTypeSelect = document.getElementById('entry-type') as HTMLSelectElement | null;
 const entryIdInput = document.getElementById('entry-id') as HTMLInputElement | null;
 const entryUrlInput = document.getElementById('entry-url') as HTMLInputElement | null;
+const entryFormTitle = document.getElementById('entry-form-title');
 
 const replaceFields = document.getElementById('replace-fields');
 const replaceFromInput = document.getElementById('replace-from') as HTMLInputElement | null;
@@ -28,6 +30,10 @@ const hoverOriginalInput = document.getElementById('hover-original') as HTMLInpu
 let userEntries: DictionaryEntry[] = [];
 let editingId: string | null = null;
 
+/**
+ * NOTE: 現状は日本語固定の辞書のみを扱うため "ja" 固定で返す。
+ * 将来的に多言語対応する場合は、言語コードを引数で受け取れるようにする。
+ */
 function getLocalizedText(value: string): { ja: string } {
   return { ja: value };
 }
@@ -48,6 +54,19 @@ function setFieldsVisibility(type: EntryKind): void {
     replaceToInput.required = isReplace;
     replaceToInput.setAttribute('aria-invalid', 'false');
   }
+  const isHover = type === 'hover';
+  if (hoverSelectorInput) {
+    hoverSelectorInput.required = isHover;
+    hoverSelectorInput.setAttribute('aria-invalid', 'false');
+  }
+  if (hoverTitleInput) {
+    hoverTitleInput.required = isHover;
+    hoverTitleInput.setAttribute('aria-invalid', 'false');
+  }
+  if (hoverDescriptionInput) {
+    hoverDescriptionInput.required = isHover;
+    hoverDescriptionInput.setAttribute('aria-invalid', 'false');
+  }
 }
 
 function resetForm(): void {
@@ -59,6 +78,9 @@ function resetForm(): void {
   }
   if (cancelEditButton) {
     cancelEditButton.classList.add('hidden');
+  }
+  if (entryFormTitle) {
+    entryFormTitle.textContent = '新規エントリ';
   }
 }
 
@@ -84,11 +106,18 @@ function validateEntry(): string | null {
     }
   }
   if (type === 'hover') {
-    if (
-      !hoverSelectorInput?.value.trim() ||
-      !hoverTitleInput?.value.trim() ||
-      !hoverDescriptionInput?.value.trim()
-    ) {
+    if (!hoverSelectorInput || !hoverTitleInput || !hoverDescriptionInput) {
+      return 'ホバー解説の必須項目を入力してください。';
+    }
+    const selectorValue = hoverSelectorInput.value.trim();
+    const titleValue = hoverTitleInput.value.trim();
+    const descriptionValue = hoverDescriptionInput.value.trim();
+    const missing =
+      selectorValue.length === 0 || titleValue.length === 0 || descriptionValue.length === 0;
+    hoverSelectorInput.setAttribute('aria-invalid', missing ? 'true' : 'false');
+    hoverTitleInput.setAttribute('aria-invalid', missing ? 'true' : 'false');
+    hoverDescriptionInput.setAttribute('aria-invalid', missing ? 'true' : 'false');
+    if (missing) {
       return 'ホバー解説の必須項目を入力してください。';
     }
   }
@@ -101,7 +130,7 @@ function buildEntry(): DictionaryEntry | null {
     return null;
   }
   const id = entryIdInput.value.trim();
-  const urlPattern = entryUrlInput?.value.trim();
+  const urlPattern = entryUrlInput?.value.trim() || '';
 
   if (type === 'replace') {
     if (!replaceFromInput || !replaceToInput || !replaceCaseSelect) {
@@ -113,7 +142,7 @@ function buildEntry(): DictionaryEntry | null {
       from: replaceFromInput.value.trim(),
       to: getLocalizedText(replaceToInput.value.trim()),
       caseSensitive: replaceCaseSelect.value !== 'false',
-      urlPattern: urlPattern ? urlPattern : undefined,
+      urlPattern: urlPattern || undefined,
     } satisfies ReplaceEntry;
   }
 
@@ -133,21 +162,30 @@ function buildEntry(): DictionaryEntry | null {
     title: getLocalizedText(hoverTitleInput.value.trim()),
     description: getLocalizedText(hoverDescriptionInput.value.trim()),
     originalLabel: hoverOriginalInput.value.trim() || undefined,
-    urlPattern: urlPattern ? urlPattern : undefined,
+    urlPattern: urlPattern || undefined,
   } satisfies HoverEntry;
 }
 
 function saveUserEntries(entries: DictionaryEntry[]): void {
   userEntries = entries;
-  chrome.storage.local.set({ [STORAGE_KEY]: entries });
-  renderList();
+  chrome.storage.local.set({ [STORAGE_KEY]: entries }, () => {
+    if (chrome.runtime.lastError) {
+      console.error(
+        '[gittohabu] ユーザ辞書の保存に失敗しました:',
+        chrome.runtime.lastError.message,
+      );
+      alert('保存に失敗しました。もう一度お試しください。');
+      return;
+    }
+    renderList();
+  });
 }
 
 function formatEntrySummary(entry: DictionaryEntry): string {
   if (entry.type === 'replace') {
-    return `"${entry.from}" → "${entry.to.ja}"`;
+    return `"${entry.from}" → "${entry.to?.ja ?? ''}"`;
   }
-  return entry.title.ja;
+  return entry.title?.ja ?? '';
 }
 
 function renderList(): void {
@@ -254,6 +292,9 @@ function startEdit(entry: DictionaryEntry): void {
   }
   setFieldsVisibility(entry.type);
   cancelEditButton?.classList.remove('hidden');
+  if (entryFormTitle) {
+    entryFormTitle.textContent = 'エントリを編集';
+  }
 }
 
 function loadUserEntries(): void {
@@ -273,32 +314,6 @@ function loadUserEntries(): void {
     }
     renderList();
   });
-}
-
-function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
-  if (!entry || typeof entry !== 'object') {
-    return false;
-  }
-  const candidate = entry as DictionaryEntry;
-  if (candidate.type === 'replace') {
-    return (
-      typeof candidate.id === 'string' &&
-      typeof candidate.from === 'string' &&
-      candidate.to &&
-      typeof candidate.to === 'object'
-    );
-  }
-  if (candidate.type === 'hover') {
-    return (
-      typeof candidate.id === 'string' &&
-      typeof candidate.selector === 'string' &&
-      candidate.title &&
-      typeof candidate.title === 'object' &&
-      candidate.description &&
-      typeof candidate.description === 'object'
-    );
-  }
-  return false;
 }
 
 entryTypeSelect?.addEventListener('change', () => {

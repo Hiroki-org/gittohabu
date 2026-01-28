@@ -70,9 +70,19 @@
       }
 
       .switch input {
-        opacity: 0;
-        width: 0;
-        height: 0;
+        position: absolute;
+        width: 1px;
+        height: 1px;
+        padding: 0;
+        margin: -1px;
+        overflow: hidden;
+        clip: rect(0, 0, 0, 0);
+        border: 0;
+      }
+
+      .switch input:focus-visible + .slider {
+        outline: 2px solid #58a6ff;
+        outline-offset: 2px;
       }
 
       .slider {
@@ -140,7 +150,11 @@
       <div class="toggle-row">
         <span class="toggle-label">拡張機能</span>
         <label class="switch">
-          <input id="enabled-toggle" type="checkbox" />
+          <input
+            id="enabled-toggle"
+            type="checkbox"
+            aria-label="拡張機能の有効/無効切り替え"
+          />
           <span class="slider"></span>
         </label>
       </div>

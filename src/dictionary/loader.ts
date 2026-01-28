@@ -35,7 +35,7 @@ async function loadUserDictionary(): Promise<Dictionary['entries']> {
   });
 }
 
-function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
+export function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
   if (!entry || typeof entry !== 'object') {
     return false;
   }

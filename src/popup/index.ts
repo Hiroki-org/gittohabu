@@ -30,9 +30,22 @@ function loadStatus(): void {
 }
 
 toggle?.addEventListener('change', () => {
+  if (!toggle) {
+    return;
+  }
   const enabled = toggle.checked;
-  chrome.storage.local.set({ [ENABLED_KEY]: enabled });
-  renderStatus(enabled);
+  chrome.storage.local.set({ [ENABLED_KEY]: enabled }, () => {
+    if (chrome.runtime.lastError) {
+      console.error(
+        '[gittohabu] 設定の保存に失敗しました:',
+        chrome.runtime.lastError.message,
+      );
+      alert('設定を保存できませんでした。もう一度お試しください。');
+      loadStatus();
+      return;
+    }
+    renderStatus(enabled);
+  });
 });
 
 openOptionsButton?.addEventListener('click', () => {
