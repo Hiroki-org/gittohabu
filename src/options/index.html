@@ -3,9 +3,250 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Options</title>
+    <title>Gittohabu 設定</title>
+    <style>
+      :root {
+        color-scheme: dark;
+        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+      }
+
+      body {
+        margin: 0;
+        background: #0d1117;
+        color: #c9d1d9;
+      }
+
+      main {
+        max-width: 900px;
+        margin: 0 auto;
+        padding: 32px 20px 60px;
+        box-sizing: border-box;
+      }
+
+      h1 {
+        font-size: 22px;
+        margin-bottom: 8px;
+      }
+
+      .muted {
+        color: #8b949e;
+        font-size: 13px;
+      }
+
+      .section {
+        margin-top: 28px;
+        background: #161b22;
+        border-radius: 12px;
+        padding: 20px;
+      }
+
+      .section-header {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        margin-bottom: 16px;
+      }
+
+      .section-title {
+        font-size: 16px;
+        margin: 0;
+      }
+
+      .card {
+        border: 1px solid #30363d;
+        border-radius: 10px;
+        padding: 16px;
+        margin-bottom: 12px;
+        background: #0d1117;
+      }
+
+      .card-header {
+        display: flex;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .card-title {
+        font-weight: 600;
+        font-size: 14px;
+        margin: 0 0 4px;
+      }
+
+      .card-meta {
+        font-size: 12px;
+        color: #8b949e;
+      }
+
+      .badge {
+        font-size: 11px;
+        padding: 2px 8px;
+        border-radius: 999px;
+        background: #30363d;
+        color: #8b949e;
+      }
+
+      .actions {
+        display: flex;
+        gap: 8px;
+      }
+
+      button {
+        padding: 6px 12px;
+        border-radius: 6px;
+        border: 1px solid #30363d;
+        background: #21262d;
+        color: #c9d1d9;
+        font-size: 12px;
+        cursor: pointer;
+      }
+
+      button:hover {
+        background: #30363d;
+      }
+
+      button.primary {
+        background: #238636;
+        border-color: #238636;
+        color: #ffffff;
+      }
+
+      button.primary:hover {
+        background: #2ea043;
+      }
+
+      button.danger {
+        border-color: #da3633;
+        color: #ff7b72;
+      }
+
+      .form-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+        gap: 12px;
+      }
+
+      label {
+        display: block;
+        font-size: 12px;
+        margin-bottom: 4px;
+        color: #8b949e;
+      }
+
+      input,
+      select,
+      textarea {
+        width: 100%;
+        box-sizing: border-box;
+        border-radius: 6px;
+        border: 1px solid #30363d;
+        background: #0d1117;
+        color: #c9d1d9;
+        padding: 8px 10px;
+        font-size: 13px;
+      }
+
+      textarea {
+        min-height: 80px;
+        resize: vertical;
+      }
+
+      .form-actions {
+        display: flex;
+        gap: 8px;
+        margin-top: 12px;
+      }
+
+      .hidden {
+        display: none !important;
+      }
+    </style>
   </head>
   <body>
+    <main>
+      <header>
+        <h1>Gittohabu 設定</h1>
+        <p class="muted">ユーザ辞書を追加・編集して、GitHub上の表示をカスタマイズできます。</p>
+      </header>
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title">辞書エントリ一覧</h2>
+        </div>
+        <div id="entry-list"></div>
+      </section>
+
+      <section class="section">
+        <div class="section-header">
+          <h2 class="section-title" id="entry-form-title">新規エントリ</h2>
+          <button id="reset-form" type="button">リセット</button>
+        </div>
+        <form id="entry-form">
+          <div class="form-grid">
+            <div>
+              <label for="entry-type">タイプ</label>
+              <select id="entry-type" required>
+                <option value="replace">テキスト置換</option>
+                <option value="hover">ホバー解説</option>
+              </select>
+            </div>
+            <div>
+              <label for="entry-id">ID</label>
+              <input id="entry-id" type="text" required />
+            </div>
+            <div>
+              <label for="entry-url">URLパターン（任意）</label>
+              <input id="entry-url" type="text" />
+            </div>
+          </div>
+
+          <div id="replace-fields">
+            <div class="form-grid">
+              <div>
+                <label for="replace-from">置換前テキスト</label>
+                <input id="replace-from" type="text" required />
+              </div>
+              <div>
+                <label for="replace-to">置換後テキスト</label>
+                <input id="replace-to" type="text" required />
+              </div>
+              <div>
+                <label for="replace-case">大文字小文字区別</label>
+                <select id="replace-case">
+                  <option value="true">区別する</option>
+                  <option value="false">区別しない</option>
+                </select>
+              </div>
+            </div>
+          </div>
+
+          <div id="hover-fields" class="hidden">
+            <div class="form-grid">
+              <div>
+                <label for="hover-selector">CSSセレクタ</label>
+                <input id="hover-selector" type="text" />
+              </div>
+              <div>
+                <label for="hover-title">タイトル</label>
+                <input id="hover-title" type="text" />
+              </div>
+              <div>
+                <label for="hover-description">説明</label>
+                <textarea id="hover-description"></textarea>
+              </div>
+              <div>
+                <label for="hover-original">元ラベル（任意）</label>
+                <input id="hover-original" type="text" />
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button class="primary" id="save-entry" type="submit">保存</button>
+            <button id="cancel-edit" type="button" class="hidden">編集をキャンセル</button>
+          </div>
+        </form>
+      </section>
+    </main>
     <script type="module" src="./index.ts"></script>
   </body>
 </html>

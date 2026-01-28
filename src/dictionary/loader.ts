@@ -19,11 +19,15 @@ async function loadUserDictionary(): Promise<Dictionary['entries']> {
           return;
         }
         const data = result[STORAGE_KEY];
+        if (Array.isArray(data)) {
+          resolve(data.filter(isDictionaryEntry));
+          return;
+        }
         if (data && Array.isArray(data.entries)) {
           resolve(data.entries.filter(isDictionaryEntry));
-        } else {
-          resolve([]);
+          return;
         }
+        resolve([]);
       });
     } catch {
       resolve([]);
@@ -31,7 +35,7 @@ async function loadUserDictionary(): Promise<Dictionary['entries']> {
   });
 }
 
-function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
+export function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
   if (!entry || typeof entry !== 'object') {
     return false;
   }

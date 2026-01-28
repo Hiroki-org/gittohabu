@@ -1,6 +1,6 @@
 import { loadDictionary, getReplaceEntries } from '../dictionary/loader';
 import { startObserver, stopObserver } from './observer';
-import { replaceAll, setEnabled, setReplaceEntries } from './replacer';
+import { isReplaceEnabled, replaceAll, setEnabled, setReplaceEntries } from './replacer';
 import { hideTooltip, showTooltip } from './tooltip';
 
 async function init(): Promise<void> {
@@ -41,6 +41,15 @@ async function init(): Promise<void> {
   console.log('[gittohabu] Initialized with', replaceEntries.length, 'replace entries');
 }
 
+async function refreshDictionary(): Promise<void> {
+  const dictionary = await loadDictionary();
+  const replaceEntries = getReplaceEntries(dictionary);
+  setReplaceEntries(replaceEntries);
+  if (isReplaceEnabled()) {
+    replaceAll();
+  }
+}
+
 function loadEnabledState(): Promise<boolean> {
   return new Promise((resolve) => {
     try {
@@ -78,6 +87,11 @@ async function start(): Promise<void> {
       } else {
         stopObserver();
       }
+    }
+    if (changes.gittohabu_user_dictionary) {
+      refreshDictionary().catch((error) => {
+        console.warn('[gittohabu] 辞書の更新に失敗しました:', error);
+      });
     }
   });
 }

@@ -61,6 +61,10 @@ export function setEnabled(enabled: boolean): void {
   isEnabled = enabled;
 }
 
+export function isReplaceEnabled(): boolean {
+  return isEnabled;
+}
+
 /**
  * 現在の言語を設定
  */
