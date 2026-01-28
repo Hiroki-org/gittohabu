@@ -64,7 +64,7 @@ export const builtinDictionary: Dictionary = {
     {
       type: 'hover',
       id: 'hover-merge-btn',
-      selector: 'button.btn-primary:has-text("Merge pull request")',
+      selector: 'button.btn-primary',
       originalLabel: 'Merge pull request',
       title: { ja: 'プルリクエストをマージ' },
       description: {

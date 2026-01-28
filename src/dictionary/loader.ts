@@ -8,14 +8,22 @@ const STORAGE_KEY = 'gittohabu_user_dictionary';
  */
 async function loadUserDictionary(): Promise<Dictionary['entries']> {
   return new Promise((resolve) => {
-    chrome.storage.local.get(STORAGE_KEY, (result) => {
-      const data = result[STORAGE_KEY];
-      if (data && Array.isArray(data.entries)) {
-        resolve(data.entries);
-      } else {
-        resolve([]);
-      }
-    });
+    try {
+      chrome.storage.local.get(STORAGE_KEY, (result) => {
+        if (chrome.runtime.lastError) {
+          resolve([]);
+          return;
+        }
+        const data = result[STORAGE_KEY];
+        if (data && Array.isArray(data.entries)) {
+          resolve(data.entries);
+        } else {
+          resolve([]);
+        }
+      });
+    } catch {
+      resolve([]);
+    }
   });
 }
 
