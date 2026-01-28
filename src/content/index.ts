@@ -5,12 +5,12 @@ document.querySelectorAll('.btn-primary').forEach((btn) => {
     if (!(e.ctrlKey || e.metaKey)) {
       return;
     }
+    const anchor = e.currentTarget;
+    if (!(anchor instanceof HTMLElement)) {
+      return;
+    }
     showTooltip({
-      anchor: e.currentTarget as HTMLElement,
-      title: 'Create pull request',
-      text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
-    });
-  });
+      anchor,
       title: 'Create pull request',
       text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
     });
