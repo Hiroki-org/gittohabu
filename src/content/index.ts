@@ -45,9 +45,19 @@ function loadEnabledState(): Promise<boolean> {
   return new Promise((resolve) => {
     try {
       chrome.storage.local.get('gittohabu_enabled', (result) => {
+        if (chrome.runtime.lastError) {
+          console.warn('[gittohabu] storage error:', chrome.runtime.lastError);
+          resolve(true);
+          return;
+        }
         const stored = result.gittohabu_enabled;
         resolve(typeof stored === 'boolean' ? stored : true);
       });
+    } catch {
+      resolve(true);
+    }
+  });
+}
     } catch {
       resolve(true);
     }
