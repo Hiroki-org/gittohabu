@@ -39,6 +39,15 @@ function setFieldsVisibility(type: EntryKind): void {
   if (hoverFields) {
     hoverFields.classList.toggle('hidden', type !== 'hover');
   }
+  const isReplace = type === 'replace';
+  if (replaceFromInput) {
+    replaceFromInput.required = isReplace;
+    replaceFromInput.setAttribute('aria-invalid', 'false');
+  }
+  if (replaceToInput) {
+    replaceToInput.required = isReplace;
+    replaceToInput.setAttribute('aria-invalid', 'false');
+  }
 }
 
 function resetForm(): void {
@@ -62,7 +71,15 @@ function validateEntry(): string | null {
     return 'IDは必須です。';
   }
   if (type === 'replace') {
-    if (!replaceFromInput?.value.trim() || !replaceToInput?.value.trim()) {
+    if (!replaceFromInput || !replaceToInput) {
+      return '置換前/置換後のテキストは必須です。';
+    }
+    const fromValue = replaceFromInput.value.trim();
+    const toValue = replaceToInput.value.trim();
+    const missing = fromValue.length === 0 || toValue.length === 0;
+    replaceFromInput.setAttribute('aria-invalid', missing ? 'true' : 'false');
+    replaceToInput.setAttribute('aria-invalid', missing ? 'true' : 'false');
+    if (missing) {
       return '置換前/置換後のテキストは必須です。';
     }
   }
@@ -304,6 +321,17 @@ entryForm?.addEventListener('submit', (event) => {
   }
   const existingIndex = nextEntries.findIndex((item) => item.id === entry.id);
   if (existingIndex >= 0) {
+    const isEditingSame = editingId === entry.id;
+    if (!isEditingSame) {
+      const builtins = builtinDictionary.entries;
+      const isBuiltin = builtins.some((item) => item.id === entry.id);
+      const message = isBuiltin
+        ? 'ビルトインのIDと同じため上書きします。続行しますか？'
+        : '同じIDのエントリを上書きしますか？';
+      if (!confirm(message)) {
+        return;
+      }
+    }
     nextEntries[existingIndex] = entry;
   } else {
     nextEntries.push(entry);
