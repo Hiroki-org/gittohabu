@@ -54,6 +54,9 @@ export function showTooltip(config: TooltipConfig): void {
   tooltipElement.style.opacity = '0';
   tooltipElement.style.display = 'block';
 
+  // Force reflow to ensure accurate dimensions
+  void tooltipElement.offsetHeight;
+
   const pos = calculatePosition(config.anchor, tooltipElement);
   tooltipElement.style.top = `${pos.top}px`;
   tooltipElement.style.left = `${pos.left}px`;
