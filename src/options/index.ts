@@ -138,7 +138,13 @@ function renderList(): void {
   entryList.replaceChildren();
 
   const builtins = builtinDictionary.entries;
-  const allEntries = [...builtins, ...userEntries];
+  const builtinMap = new Map(builtins.map((entry) => [entry.id, entry]));
+  const userMap = new Map(userEntries.map((entry) => [entry.id, entry]));
+  const mergedEntries = new Map(builtinMap);
+  for (const entry of userEntries) {
+    mergedEntries.set(entry.id, entry);
+  }
+  const allEntries = Array.from(mergedEntries.values());
 
   if (allEntries.length === 0) {
     const empty = document.createElement('p');
@@ -149,7 +155,7 @@ function renderList(): void {
   }
 
   for (const entry of allEntries) {
-    const isBuiltin = builtins.some((builtin) => builtin.id === entry.id);
+    const isBuiltin = builtinMap.has(entry.id) && !userMap.has(entry.id);
     const card = document.createElement('div');
     card.className = 'card';
 
