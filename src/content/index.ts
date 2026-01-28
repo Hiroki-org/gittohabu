@@ -6,7 +6,11 @@ document.querySelectorAll('.btn-primary').forEach((btn) => {
       return;
     }
     showTooltip({
-      anchor: e.target as HTMLElement,
+      anchor: e.currentTarget as HTMLElement,
+      title: 'Create pull request',
+      text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
+    });
+  });
       title: 'Create pull request',
       text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
     });
