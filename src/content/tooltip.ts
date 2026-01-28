@@ -1,4 +1,5 @@
 import type { TooltipConfig, TooltipPosition } from '../types';
+import { ensureTooltipStyles } from './styles';
 
 const TOOLTIP_ID = 'gittohabu-tooltip';
 const TOOLTIP_OFFSET = 8;
@@ -6,21 +7,6 @@ const TOOLTIP_OFFSET = 8;
 function createTooltipElement(): HTMLDivElement {
   const el = document.createElement('div');
   el.id = TOOLTIP_ID;
-  el.style.cssText = `
-    position: fixed;
-    z-index: 9999;
-    max-width: 300px;
-    padding: 8px 12px;
-    background: #24292f;
-    color: #ffffff;
-    border-radius: 6px;
-    font-size: 12px;
-    line-height: 1.5;
-    box-shadow: 0 8px 24px rgba(140,149,159,0.2);
-    pointer-events: none;
-    opacity: 0;
-    transition: opacity 0.15s ease-in-out;
-  `;
   return el;
 }
 
@@ -50,6 +36,7 @@ let tooltipElement: HTMLDivElement | null = null;
 
 export function showTooltip(config: TooltipConfig): void {
   if (!tooltipElement) {
+    ensureTooltipStyles();
     tooltipElement = createTooltipElement();
     document.body.appendChild(tooltipElement);
   }
