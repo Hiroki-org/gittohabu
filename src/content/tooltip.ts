@@ -63,5 +63,11 @@ export function showTooltip(config: TooltipConfig): void {
 export function hideTooltip(): void {
   if (tooltipElement) {
     tooltipElement.style.opacity = '0';
+    tooltipElement.addEventListener('transitionend', () => {
+      // アニメーション中に再度表示された場合を考慮し、opacityを確認
+      if (tooltipElement?.style.opacity === '0') {
+        tooltipElement.style.display = 'none';
+      }
+    }, { once: true });
   }
 }
