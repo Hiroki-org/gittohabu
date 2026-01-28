@@ -54,11 +54,15 @@ export function showTooltip(config: TooltipConfig): void {
     document.body.appendChild(tooltipElement);
   }
 
+  tooltipElement.replaceChildren();
+
   if (config.title) {
-    tooltipElement.innerHTML = `<strong>${config.title}</strong><br>${config.text}`;
-  } else {
-    tooltipElement.textContent = config.text;
+    const strong = document.createElement('strong');
+    strong.textContent = config.title;
+    tooltipElement.append(strong, document.createElement('br'));
   }
+
+  tooltipElement.append(config.text);
 
   tooltipElement.style.opacity = '0';
   tooltipElement.style.display = 'block';
