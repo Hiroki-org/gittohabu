@@ -1,7 +1,10 @@
 import { hideTooltip, showTooltip } from './tooltip';
 
 document.querySelectorAll('.btn-primary').forEach((btn) => {
-  btn.addEventListener('mouseenter', (e) => {
+  btn.addEventListener('mouseenter', (e: MouseEvent) => {
+    if (!(e.ctrlKey || e.metaKey)) {
+      return;
+    }
     showTooltip({
       anchor: e.target as HTMLElement,
       title: 'Create pull request',
