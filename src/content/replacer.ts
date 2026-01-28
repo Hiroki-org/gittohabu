@@ -24,13 +24,31 @@ export function setReplaceEntries(entries: ReplaceEntry[]): void {
   for (const entry of entries) {
     try {
       const flags = entry.caseSensitive === false ? 'gi' : 'g';
+      let urlPattern: RegExp | undefined;
+      if (entry.urlPattern) {
+        try {
+          urlPattern = new RegExp(entry.urlPattern);
+        } catch (error) {
+          console.warn(
+            '[gittohabu] urlPatternの正規表現が無効です:',
+            entry.urlPattern,
+            error,
+          );
+          continue;
+        }
+      }
+      const fromPattern = new RegExp(escapeRegExp(entry.from), flags);
       nextEntries.push({
         entry,
-        urlPattern: entry.urlPattern ? new RegExp(entry.urlPattern) : undefined,
-        fromPattern: new RegExp(escapeRegExp(entry.from), flags),
+        urlPattern,
+        fromPattern,
       });
     } catch (error) {
-      console.warn('[gittohabu] 置換エントリの正規表現が無効です:', entry, error);
+      console.warn(
+        '[gittohabu] fromの正規表現が無効です:',
+        entry.from,
+        error,
+      );
     }
   }
   compiledEntries = nextEntries;
