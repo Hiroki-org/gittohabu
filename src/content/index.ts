@@ -18,24 +18,45 @@ async function init(): Promise<void> {
   }
 
   // TODO: https://github.com/Hiroki-org/gittohabu/issues/5 ツールチップUI統合（hover設定の再利用）
-  document.querySelectorAll('.btn-primary').forEach((btn) => {
-    btn.addEventListener('mouseenter', (e: MouseEvent) => {
-      if (!(e.ctrlKey || e.metaKey)) {
-        return;
-      }
-      const anchor = e.currentTarget;
-      if (!(anchor instanceof HTMLElement)) {
-        return;
-      }
-      showTooltip({
-        anchor,
-        title: 'Create pull request',
-        text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
-      });
+  document.addEventListener('mouseover', (e: MouseEvent) => {
+    if (!(e.ctrlKey || e.metaKey)) {
+      return;
+    }
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+    const anchor = target.closest('.btn-primary');
+    if (!anchor || !(anchor instanceof HTMLElement)) {
+      return;
+    }
+    // Simulate mouseenter: verify we are not coming from a child
+    if (e.relatedTarget instanceof Node && anchor.contains(e.relatedTarget)) {
+      return;
+    }
+
+    showTooltip({
+      anchor,
+      title: 'Create pull request',
+      text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
     });
-    btn.addEventListener('mouseleave', () => {
-      hideTooltip();
-    });
+  });
+
+  document.addEventListener('mouseout', (e: MouseEvent) => {
+    const target = e.target;
+    if (!(target instanceof HTMLElement)) {
+      return;
+    }
+    const anchor = target.closest('.btn-primary');
+    if (!anchor || !(anchor instanceof HTMLElement)) {
+      return;
+    }
+    // Simulate mouseleave: verify we are not going to a child
+    if (e.relatedTarget instanceof Node && anchor.contains(e.relatedTarget)) {
+      return;
+    }
+
+    hideTooltip();
   });
 
   console.log('[gittohabu] Initialized with', replaceEntries.length, 'replace entries');
