@@ -209,6 +209,7 @@ function renderList(): void {
     return;
   }
 
+  const fragment = document.createDocumentFragment();
   for (const entry of allEntries) {
     const isBuiltin = builtinMap.has(entry.id) && !userMap.has(entry.id);
     const card = document.createElement('div');
@@ -257,8 +258,9 @@ function renderList(): void {
 
     header.append(info, actions);
     card.append(header);
-    entryList.append(card);
+    fragment.append(card);
   }
+  entryList.append(fragment);
 }
 
 function startEdit(entry: DictionaryEntry): void {
