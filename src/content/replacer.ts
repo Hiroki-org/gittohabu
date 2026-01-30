@@ -141,14 +141,9 @@ export function replaceTextInElement(element: Element | Document): void {
     },
   );
 
-  const textNodes: Text[] = [];
   let currentNode: Node | null;
   while ((currentNode = walker.nextNode())) {
-    textNodes.push(currentNode as Text);
-  }
-
-  for (const textNode of textNodes) {
-    replaceTextNode(textNode);
+    replaceTextNode(currentNode as Text);
   }
 }
 
