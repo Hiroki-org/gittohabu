@@ -3,6 +3,15 @@
 GitHub向けChrome拡張の雛形です。
 Vite, TypeScript, CRXJS Vite Pluginを使用しています。
 
+## このテンプレートについて
+
+このプロジェクトは、GitHub向けのChrome拡張機能を開発するためのスターターテンプレートです。
+以下の技術スタックを採用しています。
+
+*   **Vite**: 高速なビルドツール
+*   **TypeScript**: 型安全性
+*   **CRXJS Vite Plugin**: Chrome拡張開発のためのViteプラグイン（HMR対応）
+
 ## 前提条件
 
 *   Node.js (LTS推奨)
@@ -30,7 +39,7 @@ npm run dev
 1.  Google Chromeを開き、アドレスバーに `chrome://extensions` と入力して移動します。
 2.  右上の「デベロッパーモード」トグルをオンにします。
 3.  「パッケージ化されていない拡張機能を読み込む」ボタンをクリックします。
-4.  プロジェクトの `dist` ディレクトリを選択します。（※事前に `npm run dev` または `npm run build` の実行が必要です）
+4.  プロジェクトの `dist` ディレクトリを選択します。
 
 ## ビルド方法
 
@@ -41,11 +50,28 @@ npm run dev
 npm run build
 ```
 
+## テストとリンティング
+
+現在はTypeScriptの型チェックのみ設定されています。
+
+```bash
+npm run type-check
+```
+
 ## ディレクトリ構成
 
 *   `src/background`: Service Workerとして動作するバックグラウンドスクリプト
 *   `src/content`: GitHubのページ上で動作するコンテンツスクリプト
 *   `src/popup`: 拡張機能のアイコンをクリックしたときに表示されるポップアップ
 *   `src/options`: 拡張機能のオプションページ
-*   `src/dictionary`: 辞書データ（UIテキストの置換やホバー解説の定義）関連の処理
+*   `src/dictionary`: 辞書データ関連の処理
 *   `public`: 静的アセット（アイコンなど）
+
+## コントリビューション
+
+バグ報告や機能追加のプルリクエストは歓迎します。
+貢献する場合は、既存のコードスタイルに従ってください。
+
+## ライセンス
+
+このプロジェクトのライセンス情報は `package.json` を参照してください。
