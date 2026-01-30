@@ -19,7 +19,7 @@ async function init(): Promise<void> {
 
   // TODO: https://github.com/Hiroki-org/gittohabu/issues/5 ツールチップUI統合（hover設定の再利用）
   document.querySelectorAll('.btn-primary').forEach((btn) => {
-    btn.addEventListener('mouseenter', (e: MouseEvent) => {
+    (btn as HTMLElement).addEventListener('mouseenter', (e: MouseEvent) => {
       if (!(e.ctrlKey || e.metaKey)) {
         return;
       }
