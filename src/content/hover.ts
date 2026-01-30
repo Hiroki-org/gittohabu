@@ -8,8 +8,12 @@ type CompiledHoverEntry = {
 
 let compiledEntries: CompiledHoverEntry[] = [];
 let isEnabled = false;
-const currentLang = 'ja';
+let currentLang = 'ja';
 let currentAnchor: HTMLElement | null = null;
+
+export function setLanguage(lang: string): void {
+  currentLang = lang;
+}
 
 function getLocalizedValue(text: { [key: string]: string }): string {
   return text[currentLang] || text['en'] || Object.values(text)[0] || '';
