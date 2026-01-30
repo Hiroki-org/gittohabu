@@ -12,9 +12,39 @@ type CompiledReplaceEntry = {
 /** 置換対象のエントリ一覧 */
 let compiledEntries: CompiledReplaceEntry[] = [];
 
-/** 現在のURLに適用可能なエントリのキャッシュ */
-let activeEntries: CompiledReplaceEntry[] = [];
-let cachedUrl: string | null = null;
+/**
+ * 有効なエントリのキャッシュを管理するクラス
+ */
+class ReplacementCache {
+  private activeEntries: CompiledReplaceEntry[] = [];
+  private cachedUrl: string | null = null;
+
+  /**
+   * キャッシュを無効化
+   */
+  invalidate(): void {
+    this.cachedUrl = null;
+    this.activeEntries = [];
+  }
+
+  /**
+   * 現在のURLに適用可能なエントリを取得
+   */
+  get(allEntries: CompiledReplaceEntry[]): CompiledReplaceEntry[] {
+    const currentUrl = window.location.href;
+    if (this.cachedUrl === currentUrl) {
+      return this.activeEntries;
+    }
+
+    this.activeEntries = allEntries.filter(
+      (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+    );
+    this.cachedUrl = currentUrl;
+    return this.activeEntries;
+  }
+}
+
+const entryCache = new ReplacementCache();
 
 /** 置換が有効かどうか */
 let isEnabled = true;
@@ -57,24 +87,7 @@ export function setReplaceEntries(entries: ReplaceEntry[]): void {
   }
   compiledEntries = nextEntries;
   // キャッシュをクリア
-  cachedUrl = null;
-  activeEntries = [];
-}
-
-/**
- * 現在のURLに適用可能なエントリを取得
- */
-function getActiveEntries(): CompiledReplaceEntry[] {
-  const currentUrl = window.location.href;
-  if (cachedUrl === currentUrl) {
-    return activeEntries;
-  }
-
-  activeEntries = compiledEntries.filter(
-    (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
-  );
-  cachedUrl = currentUrl;
-  return activeEntries;
+  entryCache.invalidate();
 }
 
 /**
@@ -106,7 +119,7 @@ export function replaceTextNode(node: Text): void {
 
   let modified = false;
 
-  const entries = getActiveEntries();
+  const entries = entryCache.get(compiledEntries);
 
   for (const compiled of entries) {
     const replacement = compiled.entry.to[currentLang];
