@@ -47,5 +47,5 @@ npm run build
 *   `src/content`: GitHubのページ上で動作するコンテンツスクリプト
 *   `src/popup`: 拡張機能のアイコンをクリックしたときに表示されるポップアップ
 *   `src/options`: 拡張機能のオプションページ
-*   `src/dictionary`: 辞書データ関連の処理
+*   `src/dictionary`: 辞書データ（UIテキストの置換やホバー解説の定義）関連の処理
 *   `public`: 静的アセット（アイコンなど）
