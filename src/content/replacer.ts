@@ -78,9 +78,10 @@ export function setLanguage(lang: string): void {
 export function replaceTextNode(node: Text): void {
   if (!isEnabled) return;
 
-  let text = node.textContent;
-  if (!text) return;
+  const originalText = node.textContent;
+  if (!originalText) return;
 
+  let text = originalText;
   let modified = false;
 
   for (const compiled of compiledEntries) {
