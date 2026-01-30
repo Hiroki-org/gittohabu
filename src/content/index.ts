@@ -27,7 +27,7 @@ async function init(): Promise<void> {
       return;
     }
     const anchor = target.closest('.btn-primary');
-    if (!anchor || !(anchor instanceof HTMLElement)) {
+    if (!(anchor instanceof HTMLElement)) {
       return;
     }
     // Simulate mouseenter: verify we are not coming from a child
@@ -48,7 +48,7 @@ async function init(): Promise<void> {
       return;
     }
     const anchor = target.closest('.btn-primary');
-    if (!anchor || !(anchor instanceof HTMLElement)) {
+    if (!(anchor instanceof HTMLElement)) {
       return;
     }
     // Simulate mouseleave: verify we are not going to a child
