@@ -12,6 +12,10 @@ type CompiledReplaceEntry = {
 /** 置換対象のエントリ一覧 */
 let compiledEntries: CompiledReplaceEntry[] = [];
 
+/** 現在のURLに適用可能なエントリのキャッシュ */
+let activeEntries: CompiledReplaceEntry[] = [];
+let cachedUrl: string | null = null;
+
 /** 置換が有効かどうか */
 let isEnabled = true;
 
@@ -52,6 +56,25 @@ export function setReplaceEntries(entries: ReplaceEntry[]): void {
     }
   }
   compiledEntries = nextEntries;
+  // キャッシュをクリア
+  cachedUrl = null;
+  activeEntries = [];
+}
+
+/**
+ * 現在のURLに適用可能なエントリを取得
+ */
+function getActiveEntries(): CompiledReplaceEntry[] {
+  const currentUrl = window.location.href;
+  if (cachedUrl === currentUrl) {
+    return activeEntries;
+  }
+
+  activeEntries = compiledEntries.filter(
+    (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+  );
+  cachedUrl = currentUrl;
+  return activeEntries;
 }
 
 /**
@@ -83,12 +106,9 @@ export function replaceTextNode(node: Text): void {
 
   let modified = false;
 
-  for (const compiled of compiledEntries) {
-    // URLパターンがあればチェック
-    if (compiled.urlPattern && !compiled.urlPattern.test(window.location.href)) {
-      continue;
-    }
+  const entries = getActiveEntries();
 
+  for (const compiled of entries) {
     const replacement = compiled.entry.to[currentLang];
     if (!replacement) continue;
 
