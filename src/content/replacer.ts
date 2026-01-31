@@ -114,7 +114,11 @@ export function replaceTextNode(node: Text): void {
 
   if (modified && text !== node.textContent) {
     node.textContent = text;
-    replacedNodes.add(new WeakRef(node));
+    // 重複チェック：既にこのノードが追跡されているか確認
+    const isAlreadyTracked = Array.from(replacedNodes).some((weakRef) => weakRef.deref() === node);
+    if (!isAlreadyTracked) {
+      replacedNodes.add(new WeakRef(node));
+    }
   }
 }
 
@@ -214,5 +218,8 @@ export function hotReload(): void {
       replaceAll();
       console.log('[gittohabu] ホットリロード完了');
     });
+  } else {
+    // 無効な場合も完了ログを出力
+    console.log('[gittohabu] ホットリロード完了');
   }
 }

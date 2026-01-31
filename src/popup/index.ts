@@ -7,23 +7,25 @@ const openOptionsButton = document.getElementById('open-options');
 const hotReloadButton = document.getElementById('hot-reload') as HTMLButtonElement | null;
 
 /**
- * GitHubタブにメッセージを送信
+ * GitHubタブにメッセージを送信（エラーは呼び出し元に伝播）
  */
 async function sendMessageToGitHubTabs(message: {
   type: 'hotReload' | 'getStatus';
 }): Promise<void> {
-  try {
-    const tabs = await chrome.tabs.query({ url: 'https://github.com/*' });
-    for (const tab of tabs) {
-      if (tab.id) {
-        chrome.tabs.sendMessage(tab.id, message).catch(() => {
-          // タブがまだコンテンツスクリプトをロードしていない場合は無視
-        });
-      }
+  const tabs = await chrome.tabs.query({ url: 'https://github.com/*' });
+  const sendPromises: Promise<void>[] = [];
+
+  for (const tab of tabs) {
+    if (tab.id) {
+      const promise = chrome.tabs.sendMessage(tab.id, message).catch((error) => {
+        // タブがまだコンテンツスクリプトをロードしていない場合など
+        console.warn(`[gittohabu] タブ ${tab.id} へのメッセージ送信に失敗:`, error);
+      });
+      sendPromises.push(promise);
     }
-  } catch (error) {
-    console.warn('[gittohabu] タブへのメッセージ送信に失敗:', error);
   }
+
+  await Promise.all(sendPromises);
 }
 
 function renderStatus(enabled: boolean): void {
@@ -70,29 +72,34 @@ toggle?.addEventListener('change', () => {
   });
 });
 
-hotReloadButton?.addEventListener('click', async () => {
-  if (!hotReloadButton) return;
-
-  // ボタンを一時的に無効化
-  hotReloadButton.disabled = true;
-  hotReloadButton.textContent = '⏳ 再読み込み中...';
-
-  try {
-    await sendMessageToGitHubTabs({ type: 'hotReload' });
-    hotReloadButton.textContent = '✅ 完了!';
-    setTimeout(() => {
-      hotReloadButton.disabled = false;
-      hotReloadButton.textContent = '🔄 再読み込み';
-    }, 1000);
-  } catch (error) {
-    console.error('[gittohabu] ホットリロードに失敗:', error);
-    hotReloadButton.textContent = '❌ 失敗';
-    setTimeout(() => {
-      hotReloadButton.disabled = false;
-      hotReloadButton.textContent = '🔄 再読み込み';
-    }, 1000);
+/**
+ * ホットリロードボタンの状態をリセット
+ */
+function restoreHotReloadButton(): void {
+  if (hotReloadButton) {
+    hotReloadButton.disabled = false;
+    hotReloadButton.textContent = '🔄 再読み込み';
   }
-});
+}
+
+if (hotReloadButton) {
+  hotReloadButton.addEventListener('click', async () => {
+    // ボタンを一時的に無効化
+    hotReloadButton.disabled = true;
+    hotReloadButton.textContent = '⏳ 再読み込み中...';
+
+    try {
+      await sendMessageToGitHubTabs({ type: 'hotReload' });
+      hotReloadButton.textContent = '✅ 完了!';
+    } catch (error) {
+      console.error('[gittohabu] ホットリロードに失敗:', error);
+      hotReloadButton.textContent = '❌ 失敗';
+    } finally {
+      // 1秒後にボタンをリセット
+      setTimeout(restoreHotReloadButton, 1000);
+    }
+  });
+}
 
 openOptionsButton?.addEventListener('click', () => {
   if (chrome.runtime.openOptionsPage) {

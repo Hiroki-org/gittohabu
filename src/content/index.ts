@@ -3,10 +3,9 @@ import { startObserver, stopObserver } from './observer';
 import { isReplaceEnabled, replaceAll, restoreAll, hotReload, setEnabled, setReplaceEntries } from './replacer';
 import { setHoverEntries, setHoverEnabled } from './hover';
 
-/** メッセージの型定義 */
+/** メッセージの型定義（hotReload と getStatus のみ、toggle は storage.onChanged で処理） */
 interface GittohabulMessage {
-  type: 'toggle' | 'hotReload' | 'getStatus';
-  enabled?: boolean;
+  type: 'hotReload' | 'getStatus';
 }
 
 async function init(): Promise<void> {
