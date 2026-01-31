@@ -1,0 +1,681 @@
+/**
+ * ユーザー・組織・チームに関する日本語辞書エントリ
+ * Collaborators, Members, Teams, Organizations, Followers等
+ */
+
+import { DictionaryEntry } from '../schema';
+
+export const usersOrgsEntries: DictionaryEntry[] = [
+    // === Replace Entries ===
+    // ユーザー関連
+    {
+        type: 'replace',
+        id: 'user-user',
+        from: 'User',
+        to: { ja: 'ユーザー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-users',
+        from: 'Users',
+        to: { ja: 'ユーザー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-account',
+        from: 'Account',
+        to: { ja: 'アカウント' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-accounts',
+        from: 'Accounts',
+        to: { ja: 'アカウント' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-username',
+        from: 'Username',
+        to: { ja: 'ユーザー名' },
+        caseSensitive: false,
+    },
+
+    // フォロワー・フォロイング
+    {
+        type: 'replace',
+        id: 'user-followers',
+        from: 'Followers',
+        to: { ja: 'フォロワー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-following',
+        from: 'Following',
+        to: { ja: 'フォロー中' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-follow',
+        from: 'Follow',
+        to: { ja: 'フォロー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-unfollow',
+        from: 'Unfollow',
+        to: { ja: 'フォロー解除' },
+        caseSensitive: false,
+    },
+
+    // コラボレーター・メンバー
+    {
+        type: 'replace',
+        id: 'user-collaborator',
+        from: 'Collaborator',
+        to: { ja: 'コラボレーター' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-collaborators',
+        from: 'Collaborators',
+        to: { ja: 'コラボレーター' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-member',
+        from: 'Member',
+        to: { ja: 'メンバー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-members',
+        from: 'Members',
+        to: { ja: 'メンバー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-maintainer',
+        from: 'Maintainer',
+        to: { ja: 'メンテナー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-maintainers',
+        from: 'Maintainers',
+        to: { ja: 'メンテナー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-owner',
+        from: 'Owner',
+        to: { ja: 'オーナー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-owners',
+        from: 'Owners',
+        to: { ja: 'オーナー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-admin',
+        from: 'Admin',
+        to: { ja: '管理者' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-admins',
+        from: 'Admins',
+        to: { ja: '管理者' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-administrator',
+        from: 'Administrator',
+        to: { ja: '管理者' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-administrators',
+        from: 'Administrators',
+        to: { ja: '管理者' },
+        caseSensitive: false,
+    },
+
+    // チーム
+    {
+        type: 'replace',
+        id: 'team-team',
+        from: 'Team',
+        to: { ja: 'チーム' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'team-teams',
+        from: 'Teams',
+        to: { ja: 'チーム' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'team-people',
+        from: 'People',
+        to: { ja: 'メンバー' },
+        caseSensitive: false,
+    },
+
+    // 組織
+    {
+        type: 'replace',
+        id: 'org-organization',
+        from: 'Organization',
+        to: { ja: '組織' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'org-organizations',
+        from: 'Organizations',
+        to: { ja: '組織' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'org-org',
+        from: 'Org',
+        to: { ja: '組織' },
+        caseSensitive: true,
+    },
+    {
+        type: 'replace',
+        id: 'org-orgs',
+        from: 'Orgs',
+        to: { ja: '組織' },
+        caseSensitive: true,
+    },
+    {
+        type: 'replace',
+        id: 'org-enterprise',
+        from: 'Enterprise',
+        to: { ja: 'エンタープライズ' },
+        caseSensitive: false,
+    },
+
+    // 権限・ロール
+    {
+        type: 'replace',
+        id: 'perm-permission',
+        from: 'Permission',
+        to: { ja: '権限' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-permissions',
+        from: 'Permissions',
+        to: { ja: '権限' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-role',
+        from: 'Role',
+        to: { ja: 'ロール' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-roles',
+        from: 'Roles',
+        to: { ja: 'ロール' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-read-access',
+        from: 'Read access',
+        to: { ja: '読み取りアクセス' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-write-access',
+        from: 'Write access',
+        to: { ja: '書き込みアクセス' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-admin-access',
+        from: 'Admin access',
+        to: { ja: '管理アクセス' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-triage',
+        from: 'Triage',
+        to: { ja: 'トリアージ' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'perm-maintain',
+        from: 'Maintain',
+        to: { ja: 'メンテナンス' },
+        caseSensitive: false,
+    },
+
+    // 招待
+    {
+        type: 'replace',
+        id: 'user-invite',
+        from: 'Invite',
+        to: { ja: '招待' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-invitations',
+        from: 'Invitations',
+        to: { ja: '招待' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-pending-invitations',
+        from: 'Pending invitations',
+        to: { ja: '保留中の招待' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-accept-invitation',
+        from: 'Accept invitation',
+        to: { ja: '招待を承諾' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-decline',
+        from: 'Decline',
+        to: { ja: '辞退' },
+        caseSensitive: false,
+    },
+
+    // プロフィール関連
+    {
+        type: 'replace',
+        id: 'profile-bio',
+        from: 'Bio',
+        to: { ja: '自己紹介' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-location',
+        from: 'Location',
+        to: { ja: '場所' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-website',
+        from: 'Website',
+        to: { ja: 'ウェブサイト' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-company',
+        from: 'Company',
+        to: { ja: '会社' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-email',
+        from: 'Email',
+        to: { ja: 'メール' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-twitter',
+        from: 'Twitter',
+        to: { ja: 'Twitter' },
+        caseSensitive: true,
+    },
+    {
+        type: 'replace',
+        id: 'profile-pinned',
+        from: 'Pinned',
+        to: { ja: 'ピン留め' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-pinned-repos',
+        from: 'Pinned repositories',
+        to: { ja: 'ピン留めリポジトリ' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'profile-popular-repos',
+        from: 'Popular repositories',
+        to: { ja: '人気のリポジトリ' },
+        caseSensitive: false,
+    },
+
+    // アクティビティ
+    {
+        type: 'replace',
+        id: 'activity-contribution',
+        from: 'Contribution',
+        to: { ja: 'コントリビューション' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-contributions',
+        from: 'Contributions',
+        to: { ja: 'コントリビューション' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-activity',
+        from: 'Activity',
+        to: { ja: 'アクティビティ' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-overview',
+        from: 'Activity overview',
+        to: { ja: 'アクティビティ概要' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-contribution-activity',
+        from: 'Contribution activity',
+        to: { ja: 'コントリビューションアクティビティ' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-joined',
+        from: 'Joined',
+        to: { ja: '参加' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-last-active',
+        from: 'Last active',
+        to: { ja: '最終アクティブ' },
+        caseSensitive: false,
+    },
+
+    // コントリビューショングラフ
+    {
+        type: 'replace',
+        id: 'activity-contributions-year',
+        from: 'contributions in the last year',
+        to: { ja: '過去1年間のコントリビューション' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-more-contribution',
+        from: 'More contribution activity',
+        to: { ja: 'さらにコントリビューションを表示' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'activity-less',
+        from: 'Less',
+        to: { ja: '少' },
+        caseSensitive: true,
+    },
+    {
+        type: 'replace',
+        id: 'activity-more',
+        from: 'More',
+        to: { ja: '多' },
+        caseSensitive: true,
+    },
+
+    // 通知設定
+    {
+        type: 'replace',
+        id: 'notif-notifications',
+        from: 'Notifications',
+        to: { ja: '通知' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'notif-settings',
+        from: 'Notification settings',
+        to: { ja: '通知設定' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'notif-unread',
+        from: 'Unread',
+        to: { ja: '未読' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'notif-all',
+        from: 'All notifications',
+        to: { ja: 'すべての通知' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'notif-mark-read',
+        from: 'Mark as read',
+        to: { ja: '既読にする' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'notif-mark-all-read',
+        from: 'Mark all as read',
+        to: { ja: 'すべて既読にする' },
+        caseSensitive: false,
+    },
+
+    // Sponsor関連
+    {
+        type: 'replace',
+        id: 'sponsor-sponsor',
+        from: 'Sponsor',
+        to: { ja: 'スポンサー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'sponsor-sponsoring',
+        from: 'Sponsoring',
+        to: { ja: 'スポンサー中' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'sponsor-sponsored',
+        from: 'Sponsored',
+        to: { ja: 'スポンサーされた' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'sponsor-github-sponsors',
+        from: 'GitHub Sponsors',
+        to: { ja: 'GitHub Sponsors' },
+        caseSensitive: true,
+    },
+
+    // 認証・セキュリティ
+    {
+        type: 'replace',
+        id: 'auth-2fa-full',
+        from: 'Two-factor authentication',
+        to: { ja: '二要素認証' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'auth-2fa',
+        from: '2FA',
+        to: { ja: '2FA' },
+        caseSensitive: true,
+    },
+    {
+        type: 'replace',
+        id: 'auth-ssh-keys',
+        from: 'SSH keys',
+        to: { ja: 'SSHキー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'auth-gpg-keys',
+        from: 'GPG keys',
+        to: { ja: 'GPGキー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'auth-pat',
+        from: 'Personal access tokens',
+        to: { ja: '個人アクセストークン' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'auth-oauth-apps',
+        from: 'OAuth apps',
+        to: { ja: 'OAuthアプリ' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'auth-github-apps',
+        from: 'GitHub Apps',
+        to: { ja: 'GitHub Apps' },
+        caseSensitive: true,
+    },
+
+    // ブロック関連
+    {
+        type: 'replace',
+        id: 'user-block-user',
+        from: 'Block user',
+        to: { ja: 'ユーザーをブロック' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-blocked-users',
+        from: 'Blocked users',
+        to: { ja: 'ブロックしたユーザー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-report',
+        from: 'Report',
+        to: { ja: '報告' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'user-report-abuse',
+        from: 'Report abuse',
+        to: { ja: '不正利用を報告' },
+        caseSensitive: false,
+    },
+
+    // === Hover Entries ===
+    {
+        type: 'hover',
+        id: 'hover-followers',
+        selector: 'a[href*="/followers"], span:has-text("Followers")',
+        title: { ja: 'フォロワー' },
+        description: {
+            ja: 'このユーザーをフォローしている人の数。フォローすると、そのユーザーのアクティビティがフィードに表示されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-following',
+        selector: 'a[href*="/following"], span:has-text("Following")',
+        title: { ja: 'フォロー中' },
+        description: {
+            ja: 'このユーザーがフォローしている人の数。フォロー中のユーザーのアクティビティを追跡できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-collaborators',
+        selector: 'a[href*="/collaborators"], a[href*="/access"], button:has-text("Collaborators")',
+        title: { ja: 'コラボレーター' },
+        description: {
+            ja: 'リポジトリに直接アクセスできる共同作業者。Push権限などを持ち、プロジェクトに貢献できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-organizations',
+        selector: 'a[href*="/orgs/"], a[href*="/organizations"]',
+        title: { ja: '組織' },
+        description: {
+            ja: '複数のユーザーで共有するアカウント。チーム管理、アクセス制御、請求の一元管理が可能です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-teams',
+        selector: 'a[href*="/teams"], button:has-text("Teams")',
+        title: { ja: 'チーム' },
+        description: {
+            ja: '組織内のメンバーグループ。リポジトリへのアクセス権限をチーム単位で管理できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-contributions',
+        selector: '[class*="contrib"], [class*="contribution"]',
+        title: { ja: 'コントリビューション' },
+        description: {
+            ja: 'コミット、プルリクエスト、イシュー、レビューなど、プロジェクトへの貢献。草グラフで可視化されます。',
+        },
+    },
+];
