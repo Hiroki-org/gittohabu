@@ -12,6 +12,12 @@ type CompiledReplaceEntry = {
 /** 置換対象のエントリ一覧 */
 let compiledEntries: CompiledReplaceEntry[] = [];
 
+/** 元のテキストを保持するマップ (WeakMapでメモリリークを防ぐ) */
+const originalTextMap = new WeakMap<Text, string>();
+
+/** 置換済みのテキストノードを追跡 */
+const replacedNodes = new Set<WeakRef<Text>>();
+
 /** 置換が有効かどうか */
 let isEnabled = true;
 
@@ -78,7 +84,12 @@ export function setLanguage(lang: string): void {
 export function replaceTextNode(node: Text): void {
   if (!isEnabled) return;
 
-  const originalText = node.textContent;
+  // 元のテキストを保持（初回のみ）
+  if (!originalTextMap.has(node)) {
+    originalTextMap.set(node, node.textContent ?? '');
+  }
+
+  const originalText = originalTextMap.get(node);
   if (!originalText) return;
 
   let text = originalText;
@@ -103,6 +114,7 @@ export function replaceTextNode(node: Text): void {
 
   if (modified && text !== node.textContent) {
     node.textContent = text;
+    replacedNodes.add(new WeakRef(node));
   }
 }
 
@@ -163,4 +175,44 @@ export function replaceAll(): void {
     return;
   }
   replaceTextInElement(rootElement);
+}
+
+/**
+ * 置換したテキストを元に戻す
+ */
+export function restoreAll(): void {
+  // 追跡しているノードを巡回して元のテキストに戻す
+  for (const weakRef of replacedNodes) {
+    const node = weakRef.deref();
+    if (node && originalTextMap.has(node)) {
+      const original = originalTextMap.get(node);
+      if (original !== undefined && node.textContent !== original) {
+        node.textContent = original;
+      }
+    }
+  }
+  replacedNodes.clear();
+  console.log('[gittohabu] テキストを元に戻しました');
+}
+
+/**
+ * キャッシュをクリアして再適用（ホットリロード）
+ */
+export function hotReload(): void {
+  console.log('[gittohabu] ホットリロード開始...');
+  
+  // 一旦全ての置換を元に戻す
+  restoreAll();
+  
+  // WeakMapのエントリもクリア（新しいノードとして扱う）
+  // WeakMapは直接クリアできないので、replacedNodesをクリアするだけで十分
+  
+  // 有効な場合は再度置換を実行
+  if (isEnabled) {
+    // 少し遅延させてDOMの更新を待つ
+    requestAnimationFrame(() => {
+      replaceAll();
+      console.log('[gittohabu] ホットリロード完了');
+    });
+  }
 }
