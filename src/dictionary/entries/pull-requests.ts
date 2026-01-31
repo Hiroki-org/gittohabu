@@ -310,7 +310,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-nav',
-        selector: 'nav a[href*="/pulls"], a.js-selected-navigation-item[data-tab-item="i1pull-requests-tab"]',
+        selector: 'nav a[href*="/pulls"], a.js-selected-navigation-item[data-tab-item="i1pull-requests-tab"], a[data-tab-item*="pull"], [aria-label*="Pull Request"]',
         title: { ja: 'プルリクエスト' },
         description: {
             ja: 'リポジトリへの変更を提案する機能。レビューを受けて、承認後にメインブランチにマージされます。他のコントリビューターと協力して変更内容を議論できます。',
@@ -319,7 +319,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-reviewers',
-        selector: '#reviewers-select-menu, .js-reviewer-suggestions',
+        selector: '#reviewers-select-menu, .js-reviewer-suggestions, [data-testid="reviewers-select-menu"], [aria-label*="Reviewer"], button[aria-expanded][aria-haspopup="dialog"] > span:has-text("Request a review")',
         title: { ja: 'レビュアー' },
         description: {
             ja: 'プルリクエストの変更内容をレビューする担当者。コードの品質確認やフィードバックを行います。',
@@ -328,7 +328,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-merge-options',
-        selector: '.merge-message .btn-group-merge',
+        selector: '.merge-message .btn-group-merge, [data-testid="merge-box"] .btn-group-merge, [data-testid="pull-request-merge-box"] buttongroup',
         title: { ja: 'マージオプション' },
         description: {
             ja: 'マージ方法を選択できます。マージコミット（履歴を保持）、スカッシュ（1つのコミットに圧縮）、リベース（履歴を直線化）から選べます。',
@@ -337,7 +337,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-draft',
-        selector: '[data-testid="draft-badge"], .IssueLabel--draft',
+        selector: '[data-testid="draft-badge"], .IssueLabel--draft, [aria-label*="Draft"], span:has-text("Draft")',
         title: { ja: 'ドラフト' },
         description: {
             ja: '作業中のプルリクエストを示します。ドラフト状態ではマージできず、準備完了になるまでレビューは任意です。',

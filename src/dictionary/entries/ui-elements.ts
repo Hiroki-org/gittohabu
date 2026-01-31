@@ -260,8 +260,8 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'replace',
         id: 'month-short-mar',
-        from: 'Mar ',
-        to: { ja: '3月 ' },
+        from: 'Mar',
+        to: { ja: '3月' },
         caseSensitive: true,
     },
     {
@@ -556,19 +556,25 @@ export const uiElementsEntries: DictionaryEntry[] = [
     },
 
     // ページネーション
+    // NOTE: 'First' と 'Last' は汎用的なため、URLパターンでページネーション文脈に限定
+    // 理想的には regex anchor (^First$ / ^Last$) でマッチを厳密化したいが、
+    // 現在のスキーマでは from フィールドが文字列マッチのため、urlPattern で範囲を制限
+    // 将来: replacer.ts で regex マッチング機能が追加されれば、より精密な制御が可能
     {
         type: 'replace',
         id: 'page-first',
         from: 'First',
         to: { ja: '最初' },
-        caseSensitive: false,
+        caseSensitive: true,
+        urlPattern: '/(issues|pull)\\?',
     },
     {
         type: 'replace',
         id: 'page-last',
         from: 'Last',
         to: { ja: '最後' },
-        caseSensitive: false,
+        caseSensitive: true,
+        urlPattern: '/(issues|pull)\\?',
     },
     {
         type: 'replace',
@@ -600,12 +606,18 @@ export const uiElementsEntries: DictionaryEntry[] = [
     },
 
     // フォーム要素
+    // NOTE: 以下のエントリを urlPattern で時 GitHub フォーム文脈に限定
+    // 理由: 'Add', 'Remove', 'Select', 'Required' 等は汎用的なため、
+    //      子メニューや他のコンテキストで誤りマッチを防ぐ
+    // 单一貼付けで全てのフォームエントリを管理するため、
+    //      代表的な URL パターを適用: /(issues|pull|settings)/
     {
         type: 'replace',
         id: 'form-required',
         from: 'Required',
         to: { ja: '必須' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -613,6 +625,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Optional',
         to: { ja: '任意' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -620,6 +633,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Description',
         to: { ja: '説明' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -627,6 +641,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Title',
         to: { ja: 'タイトル' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -634,6 +649,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Name',
         to: { ja: '名前' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -641,6 +657,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Type',
         to: { ja: 'タイプ' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -648,6 +665,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Value',
         to: { ja: '値' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -655,6 +673,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Add',
         to: { ja: '追加' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -662,6 +681,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Remove',
         to: { ja: '削除' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -669,6 +689,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Select',
         to: { ja: '選択' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -676,6 +697,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Select all',
         to: { ja: 'すべて選択' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -683,6 +705,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Deselect all',
         to: { ja: 'すべて解除' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -690,6 +713,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Choose',
         to: { ja: '選択' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -697,6 +721,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Enable',
         to: { ja: '有効化' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -704,6 +729,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Disable',
         to: { ja: '無効化' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -711,6 +737,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Enabled',
         to: { ja: '有効' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
     {
         type: 'replace',
@@ -718,6 +745,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
         from: 'Disabled',
         to: { ja: '無効' },
         caseSensitive: false,
+        urlPattern: '/(issues|pull|settings)/',
     },
 
     // 確認ダイアログ

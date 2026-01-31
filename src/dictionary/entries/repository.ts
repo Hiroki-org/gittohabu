@@ -104,7 +104,12 @@ export const repositoryEntries: DictionaryEntry[] = [
         caseSensitive: false,
     },
 
-    // Clone関連 (git-operationsにもあるが、リポジトリUIでも使う)
+    // Clone関連
+    // NOTE: 'Clone'エントリは git-operations.ts (id: 'git-clone') にも定義されている。
+    // 意図的な重複：リポジトリUIでは最初に 'repo-clone' がマッチし、git-operationsエントリは使用されない。
+    // この順序依存性は replacer.ts の処理順序によって制御される。
+    // 将来的には、Cloneの出現コンテキスト（リポジトリUIか一般的なGit操作か）に応じて
+    // urlPattern で明確に分け、または単一の共有エントリ (git-operations) に統一することを検討。
     {
         type: 'replace',
         id: 'repo-clone',
