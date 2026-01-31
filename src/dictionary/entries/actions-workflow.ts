@@ -751,4 +751,286 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
             ja: '依存関係を自動で監視・更新するGitHubの機能。セキュリティ脆弱性の検出とバージョン更新PRの自動作成を行います。',
         },
     },
+    // ワークフロー実行
+    {
+        type: 'hover',
+        id: 'hover-actions-run-workflow',
+        selector: '.js-run-workflow-form, [data-testid="run-workflow"]',
+        title: { ja: 'ワークフローを実行' },
+        description: {
+            ja: '手動でワークフローを実行します。workflow_dispatchイベントで定義されたワークフローで使用可能です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-rerun',
+        selector: '.js-rerun-workflow, [data-testid="re-run-jobs"]',
+        title: { ja: '再実行' },
+        description: {
+            ja: 'ワークフローを再度実行します。すべてのジョブまたは失敗したジョブのみを選択できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-cancel',
+        selector: '.js-cancel-workflow-run, [data-testid="cancel-run"]',
+        title: { ja: '実行をキャンセル' },
+        description: {
+            ja: '進行中のワークフロー実行を中断します。',
+        },
+    },
+    // ワークフロー一覧
+    {
+        type: 'hover',
+        id: 'hover-actions-workflow-list',
+        selector: '.js-workflow-list, .filter-list',
+        title: { ja: 'ワークフロー一覧' },
+        description: {
+            ja: 'リポジトリに定義されたすべてのワークフロー。各ワークフローの実行履歴を確認できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-all-workflows',
+        selector: 'a[href*="/actions"][href*="workflows"]',
+        title: { ja: 'すべてのワークフロー' },
+        description: {
+            ja: 'リポジトリ内のすべてのワークフロー実行を一覧表示します。',
+        },
+    },
+    // 実行ステータス
+    {
+        type: 'hover',
+        id: 'hover-actions-status-success',
+        selector: '.octicon-check-circle, [data-testid="status-success"]',
+        title: { ja: '成功' },
+        description: {
+            ja: 'ワークフローまたはジョブが正常に完了しました。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-status-failure',
+        selector: '.octicon-x-circle, [data-testid="status-failure"]',
+        title: { ja: '失敗' },
+        description: {
+            ja: 'ワークフローまたはジョブが失敗しました。ログを確認してエラーを特定してください。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-status-pending',
+        selector: '.octicon-pending, [data-testid="status-pending"]',
+        title: { ja: '待機中' },
+        description: {
+            ja: 'ワークフローまたはジョブがキューで実行待ちです。ランナーが空くと実行されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-status-inprogress',
+        selector: '.octicon-sync, [data-testid="status-in-progress"]',
+        title: { ja: '進行中' },
+        description: {
+            ja: 'ワークフローまたはジョブが現在実行中です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-status-cancelled',
+        selector: '.octicon-stop, [data-testid="status-cancelled"]',
+        title: { ja: 'キャンセル済み' },
+        description: {
+            ja: 'ワークフロー実行が手動でキャンセルされました。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-status-skipped',
+        selector: '.octicon-skip, [data-testid="status-skipped"]',
+        title: { ja: 'スキップ' },
+        description: {
+            ja: '条件が満たされずジョブがスキップされました。if文やneeds条件による制御です。',
+        },
+    },
+    // ログ
+    {
+        type: 'hover',
+        id: 'hover-actions-logs',
+        selector: '.js-workflow-run-logs, [data-testid="logs"]',
+        title: { ja: 'ログ' },
+        description: {
+            ja: 'ワークフロー実行の詳細ログ。各ステップの出力を確認できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-log-download',
+        selector: '.js-download-workflow-log, [aria-label*="Download logs"]',
+        title: { ja: 'ログをダウンロード' },
+        description: {
+            ja: 'ワークフローのログファイルをZIP形式でダウンロードします。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-log-search',
+        selector: '.js-search-workflow-log, [data-testid="log-search"]',
+        title: { ja: 'ログを検索' },
+        description: {
+            ja: 'ログ内のテキストを検索します。エラーメッセージの特定に便利です。',
+        },
+    },
+    // ジョブ詳細
+    {
+        type: 'hover',
+        id: 'hover-actions-job-summary',
+        selector: '.js-job-summary, [data-testid="job-summary"]',
+        title: { ja: 'ジョブサマリー' },
+        description: {
+            ja: 'ジョブの概要情報。実行時間、ステータス、使用したランナーなどを表示します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-step',
+        selector: '.js-workflow-step, [class*="step-"]',
+        title: { ja: 'ステップ' },
+        description: {
+            ja: 'ジョブ内の個別のタスク。runコマンドやactionsの実行単位です。',
+        },
+    },
+    // ランナー詳細
+    {
+        type: 'hover',
+        id: 'hover-actions-self-hosted',
+        selector: 'a[href*="/settings/actions/runners/new"]',
+        title: { ja: 'セルフホストランナー' },
+        description: {
+            ja: '自分で管理するマシン上で実行するランナー。カスタム環境や特殊なハードウェアが必要な場合に使用します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-github-hosted',
+        selector: '[data-testid="github-hosted-runner"]',
+        title: { ja: 'GitHubホストランナー' },
+        description: {
+            ja: 'GitHubが提供する仮想マシン。Ubuntu、Windows、macOSが利用可能で、毎回クリーンな環境です。',
+        },
+    },
+    // 変数・シークレット
+    {
+        type: 'hover',
+        id: 'hover-actions-variables',
+        selector: 'a[href*="/settings/variables"]',
+        title: { ja: '変数' },
+        description: {
+            ja: 'ワークフローで使用する設定値。シークレットと異なり、ログに表示されます。環境ごとに設定可能です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-environments',
+        selector: 'a[href*="/settings/environments"]',
+        title: { ja: '環境' },
+        description: {
+            ja: 'デプロイ先の環境（production、stagingなど）。環境別のシークレット、承認ルール、待機時間を設定できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-env-protection',
+        selector: '.js-environment-protection, [data-testid="protection-rules"]',
+        title: { ja: '保護ルール' },
+        description: {
+            ja: '環境へのデプロイに必要なルール。レビュアーの承認、待機時間、ブランチ制限などを設定できます。',
+        },
+    },
+    // キャッシュ
+    {
+        type: 'hover',
+        id: 'hover-actions-caches',
+        selector: 'a[href*="/actions/caches"]',
+        title: { ja: 'キャッシュ' },
+        description: {
+            ja: 'ワークフローで使用する依存関係のキャッシュ。ビルド時間を短縮できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-cache-delete',
+        selector: '.js-delete-cache, [data-testid="delete-cache"]',
+        title: { ja: 'キャッシュを削除' },
+        description: {
+            ja: 'キャッシュを手動で削除します。古いキャッシュが問題を起こす場合に使用します。',
+        },
+    },
+    // セキュリティ
+    {
+        type: 'hover',
+        id: 'hover-actions-code-scanning',
+        selector: 'a[href*="/security/code-scanning"]',
+        title: { ja: 'コードスキャン' },
+        description: {
+            ja: 'コード内のセキュリティ脆弱性を自動検出。CodeQLなどの分析ツールを使用します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-secret-scanning',
+        selector: 'a[href*="/security/secret-scanning"]',
+        title: { ja: 'シークレットスキャン' },
+        description: {
+            ja: 'コミットに含まれる認証情報（APIキー、トークン）を検出。漏洩を防止します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-dependabot-alerts',
+        selector: 'a[href*="/security/dependabot/alerts"]',
+        title: { ja: 'Dependabotアラート' },
+        description: {
+            ja: '依存パッケージのセキュリティ脆弱性に関する警告。修正版へのアップデートを推奨します。',
+        },
+    },
+    // 使用量
+    {
+        type: 'hover',
+        id: 'hover-actions-usage',
+        selector: 'a[href*="/settings/billing"]',
+        title: { ja: '使用量' },
+        description: {
+            ja: 'GitHub Actionsの使用時間とストレージ。プランに応じた無料枠と超過分の請求を確認できます。',
+        },
+    },
+    // ワークフローファイル
+    {
+        type: 'hover',
+        id: 'hover-actions-workflow-file',
+        selector: 'a[href*="/.github/workflows/"]',
+        title: { ja: 'ワークフローファイル' },
+        description: {
+            ja: 'ワークフローを定義するYAMLファイル。.github/workflows/フォルダに配置します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-actions-marketplace',
+        selector: 'a[href*="/marketplace/actions"]',
+        title: { ja: 'Actionsマーケットプレイス' },
+        description: {
+            ja: 'コミュニティが作成した再利用可能なアクション。checkout、setup-node等を検索・利用できます。',
+        },
+    },
+    // アノテーション
+    {
+        type: 'hover',
+        id: 'hover-actions-annotations',
+        selector: '.js-workflow-annotations, [data-testid="annotations"]',
+        title: { ja: 'アノテーション' },
+        description: {
+            ja: 'ワークフロー実行中に発生した警告やエラー。問題のあるコード行を直接示します。',
+        },
+    },
 ];

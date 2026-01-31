@@ -1046,4 +1046,404 @@ export const uiElementsEntries: DictionaryEntry[] = [
             ja: '読み取り専用になったリポジトリ。新しいイシューやPRは作成できませんが、コードとヒストリーは保持されます。',
         },
     },
+    // ボタン関連
+    {
+        type: 'hover',
+        id: 'hover-submit-button',
+        selector: 'button[type="submit"], .btn-primary',
+        title: { ja: '送信ボタン' },
+        description: {
+            ja: 'フォームの内容を送信します。コメント投稿、イシュー作成、設定保存などに使用されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-cancel-button',
+        selector: '.btn-danger:not([type="submit"]), [data-close-dialog]',
+        title: { ja: 'キャンセルボタン' },
+        description: {
+            ja: '現在の操作を中止し、前の状態に戻ります。入力した内容は保存されません。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-edit-button',
+        selector: '[aria-label*="Edit"], .js-blob-edit-link, a[href*="/edit/"]',
+        title: { ja: '編集ボタン' },
+        description: {
+            ja: 'ファイル、コメント、イシュー、プロフィールなどを編集モードに切り替えます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-delete-button',
+        selector: '[aria-label*="Delete"], .btn-danger[type="submit"]',
+        title: { ja: '削除ボタン' },
+        description: {
+            ja: '要素を完全に削除します。多くの場合、確認ダイアログが表示されます。一部の削除は元に戻せません。',
+        },
+    },
+    // ドロップダウン・メニュー
+    {
+        type: 'hover',
+        id: 'hover-dropdown-menu',
+        selector: '.SelectMenu, [data-menu-button], details.dropdown',
+        title: { ja: 'ドロップダウンメニュー' },
+        description: {
+            ja: 'クリックすると選択肢のリストが表示されます。フィルタ、ソート、アクションの選択に使用されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-context-menu',
+        selector: '[role="menu"], .ActionListWrap',
+        title: { ja: 'コンテキストメニュー' },
+        description: {
+            ja: '右クリックまたはメニューボタンで表示されるアクションリスト。要素に対する操作を選択できます。',
+        },
+    },
+    // タブ・ナビゲーション
+    {
+        type: 'hover',
+        id: 'hover-tab-nav',
+        selector: '[role="tablist"], .UnderlineNav-body',
+        title: { ja: 'タブナビゲーション' },
+        description: {
+            ja: 'セクション間を切り替えるタブ。Code、Issues、Pull requests、Actionsなどのメインタブがあります。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-pagination',
+        selector: '.pagination, [class*="paginate"]',
+        title: { ja: 'ページネーション' },
+        description: {
+            ja: 'コンテンツが複数ページある場合のページ切り替え。Previous/Nextまたはページ番号をクリックして移動します。',
+        },
+    },
+    // モーダル・ダイアログ
+    {
+        type: 'hover',
+        id: 'hover-modal-dialog',
+        selector: '[role="dialog"], .Box-overlay, .Overlay',
+        title: { ja: 'モーダルダイアログ' },
+        description: {
+            ja: '画面の上に重なって表示されるウィンドウ。確認や入力が必要な場合に使用されます。閉じるまで背景は操作できません。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-confirm-dialog',
+        selector: '.js-confirm-dialog, [data-confirm-dialog]',
+        title: { ja: '確認ダイアログ' },
+        description: {
+            ja: '重要な操作の前に表示される確認。削除やマージなどの取り消せない操作の前に確認を求めます。',
+        },
+    },
+    // フォーム要素
+    {
+        type: 'hover',
+        id: 'hover-text-input',
+        selector: 'input[type="text"], input:not([type]), .form-control',
+        title: { ja: 'テキスト入力フィールド' },
+        description: {
+            ja: 'テキストを入力するフィールド。タイトル、検索クエリ、ブランチ名などの入力に使用されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-textarea',
+        selector: 'textarea, .comment-form-textarea',
+        title: { ja: 'テキストエリア' },
+        description: {
+            ja: '複数行のテキストを入力するフィールド。コメント、説明、PRの本文などに使用されます。Markdownがサポートされることが多いです。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-checkbox',
+        selector: 'input[type="checkbox"], .form-checkbox',
+        title: { ja: 'チェックボックス' },
+        description: {
+            ja: 'オン/オフを切り替える要素。複数選択可能な設定やタスクリストに使用されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-radio',
+        selector: 'input[type="radio"], .form-radio',
+        title: { ja: 'ラジオボタン' },
+        description: {
+            ja: '複数の選択肢から1つを選ぶ要素。マージ方法やリポジトリの可視性選択などに使用されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-select',
+        selector: 'select, .form-select',
+        title: { ja: 'セレクトボックス' },
+        description: {
+            ja: 'ドロップダウンリストから選択する要素。ブランチ選択、言語フィルタなどに使用されます。',
+        },
+    },
+    // 検索・フィルタ
+    {
+        type: 'hover',
+        id: 'hover-search-input',
+        selector: '[type="search"], .js-site-search-focus, .subnav-search-input',
+        title: { ja: '検索フィールド' },
+        description: {
+            ja: 'キーワードで検索します。Enterキーで検索実行。高度な検索修飾子も使用できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-filter-bar',
+        selector: '.subnav, .table-list-filters',
+        title: { ja: 'フィルタバー' },
+        description: {
+            ja: 'リストの表示内容を絞り込むフィルタ。ステータス、ラベル、作成者などで絞り込めます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-sort-menu',
+        selector: '.select-menu[class*="sort"], [aria-label*="Sort"]',
+        title: { ja: 'ソートメニュー' },
+        description: {
+            ja: 'リストの並び順を変更します。日付順、人気順、アルファベット順などで並べ替えられます。',
+        },
+    },
+    // ローディング・状態表示
+    {
+        type: 'hover',
+        id: 'hover-loading',
+        selector: '[class*="loading"], .AnimatedEllipsis, [aria-busy="true"]',
+        title: { ja: '読み込み中' },
+        description: {
+            ja: 'コンテンツを読み込んでいます。操作完了まで少しお待ちください。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-spinner',
+        selector: '.Spinner, [class*="spinner"]',
+        title: { ja: 'スピナー' },
+        description: {
+            ja: '処理中を示すアニメーション。バックグラウンドで操作が進行中です。',
+        },
+    },
+    // 通知・アラート
+    {
+        type: 'hover',
+        id: 'hover-flash-message',
+        selector: '.flash, [role="alert"]',
+        title: { ja: 'フラッシュメッセージ' },
+        description: {
+            ja: '操作の結果を通知するメッセージ。成功（緑）、警告（黄）、エラー（赤）、情報（青）があります。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-banner',
+        selector: '.Banner, [class*="banner"]',
+        title: { ja: 'バナー' },
+        description: {
+            ja: '重要なお知らせを表示するバー。メンテナンス通知、新機能案内、警告などが表示されます。',
+        },
+    },
+    // ツールチップ・ポップオーバー
+    {
+        type: 'hover',
+        id: 'hover-tooltip',
+        selector: '[role="tooltip"], .tooltipped',
+        title: { ja: 'ツールチップ' },
+        description: {
+            ja: '要素にホバーすると表示される補足情報。アイコンやボタンの説明が表示されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-popover',
+        selector: '.Popover, [data-content]',
+        title: { ja: 'ポップオーバー' },
+        description: {
+            ja: 'クリックで表示される情報ボックス。詳細情報やアクション選択肢が表示されます。',
+        },
+    },
+    // トグル・スイッチ
+    {
+        type: 'hover',
+        id: 'hover-toggle-switch',
+        selector: '.ToggleSwitch, [role="switch"]',
+        title: { ja: 'トグルスイッチ' },
+        description: {
+            ja: '機能のオン/オフを切り替えるスイッチ。クリックで即座に設定が変更されます。',
+        },
+    },
+    // コピー・共有
+    {
+        type: 'hover',
+        id: 'hover-copy-button',
+        selector: '.js-clipboard-copy, [data-copy-feedback], clipboard-copy',
+        title: { ja: 'コピーボタン' },
+        description: {
+            ja: 'テキストをクリップボードにコピーします。URL、SHA、コマンドなどを素早くコピーできます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-share-button',
+        selector: '[aria-label*="Share"], [class*="share"]',
+        title: { ja: '共有ボタン' },
+        description: {
+            ja: 'コンテンツを他の人と共有します。リンクのコピーやSNSで共有ができます。',
+        },
+    },
+    // マークダウン関連
+    {
+        type: 'hover',
+        id: 'hover-markdown-preview',
+        selector: '.preview-tab, [data-preview-panel-id]',
+        title: { ja: 'プレビュータブ' },
+        description: {
+            ja: 'Markdownのレンダリング結果をプレビュー表示します。投稿前に見た目を確認できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-markdown-write',
+        selector: '.write-tab, [data-write-button]',
+        title: { ja: '編集タブ' },
+        description: {
+            ja: 'Markdownテキストを編集するモード。ツールバーでフォーマットを適用できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-markdown-toolbar',
+        selector: '.toolbar-commenting, md-header',
+        title: { ja: 'Markdownツールバー' },
+        description: {
+            ja: 'テキストにフォーマットを適用するためのツールバー。太字、リンク、リスト、コードブロックなどを挿入できます。',
+        },
+    },
+    // ファイルアップロード
+    {
+        type: 'hover',
+        id: 'hover-file-upload',
+        selector: '.js-upload-markdown-image, [data-upload-policy-url]',
+        title: { ja: 'ファイルアップロード' },
+        description: {
+            ja: '画像やファイルをアップロードします。ドラッグ＆ドロップまたはクリックしてファイルを選択できます。',
+        },
+    },
+    // サイドバー
+    {
+        type: 'hover',
+        id: 'hover-sidebar',
+        selector: '.Layout-sidebar, [class*="sidebar"]',
+        title: { ja: 'サイドバー' },
+        description: {
+            ja: 'ページの補足情報やナビゲーションを表示するサイドパネル。About、ラベル、マイルストーンなどが表示されます。',
+        },
+    },
+    // フッター
+    {
+        type: 'hover',
+        id: 'hover-footer',
+        selector: 'footer, .footer',
+        title: { ja: 'フッター' },
+        description: {
+            ja: 'ページ下部のリンク集。利用規約、プライバシーポリシー、ドキュメント、APIなどへのリンクがあります。',
+        },
+    },
+    // 展開・折りたたみ
+    {
+        type: 'hover',
+        id: 'hover-expand-collapse',
+        selector: '[aria-expanded], details summary',
+        title: { ja: '展開/折りたたみ' },
+        description: {
+            ja: 'クリックでコンテンツを表示/非表示にします。長いリストや詳細情報を整理するのに使用されます。',
+        },
+    },
+    // 絵文字ピッカー
+    {
+        type: 'hover',
+        id: 'hover-emoji-picker',
+        selector: '.emoji-picker-container, [data-emoji-picker]',
+        title: { ja: '絵文字ピッカー' },
+        description: {
+            ja: 'コメントやリアクションに絵文字を追加できます。検索やカテゴリから選択できます。',
+        },
+    },
+    // リアクション
+    {
+        type: 'hover',
+        id: 'hover-reactions',
+        selector: '.js-reaction-group-container, .comment-reactions',
+        title: { ja: 'リアクション' },
+        description: {
+            ja: 'コメントやイシューに対する絵文字リアクション。👍 👎 😄 🎉 😕 ❤️ 🚀 👀 から選べます。',
+        },
+    },
+    // アバター
+    {
+        type: 'hover',
+        id: 'hover-avatar',
+        selector: '.avatar, [class*="avatar"]',
+        title: { ja: 'アバター' },
+        description: {
+            ja: 'ユーザーのプロフィール画像。クリックするとそのユーザーのプロフィールページに移動できます。',
+        },
+    },
+    // バッジ・ラベル
+    {
+        type: 'hover',
+        id: 'hover-counter-badge',
+        selector: '.Counter, [class*="counter"]',
+        title: { ja: 'カウンターバッジ' },
+        description: {
+            ja: '数量を示すバッジ。未読通知数、イシュー数、コメント数などを表示します。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-state-label',
+        selector: '.State, .IssueLabel',
+        title: { ja: 'ステートラベル' },
+        description: {
+            ja: '状態を示すラベル。Open（緑）、Closed（赤/紫）、Merged（紫）などがあります。',
+        },
+    },
+    // コード表示関連
+    {
+        type: 'hover',
+        id: 'hover-line-numbers',
+        selector: '.blob-num, [data-line-number]',
+        title: { ja: '行番号' },
+        description: {
+            ja: 'コードの行番号。クリックで特定の行をハイライトし、その行へのパーマリンクを生成できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-syntax-highlight',
+        selector: '.blob-code, .highlight',
+        title: { ja: 'シンタックスハイライト' },
+        description: {
+            ja: 'コードの構文を色分けして表示。キーワード、文字列、コメントなどが識別しやすくなります。',
+        },
+    },
+    // 時間表示
+    {
+        type: 'hover',
+        id: 'hover-relative-time',
+        selector: 'relative-time, time-ago',
+        title: { ja: '相対時間' },
+        description: {
+            ja: '「3日前」「2時間前」などの相対的な時間表示。ホバーすると正確な日時が表示されます。',
+        },
+    },
 ];
