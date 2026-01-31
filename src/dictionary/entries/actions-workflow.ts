@@ -691,7 +691,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-actions',
-        selector: 'nav a[href*="/actions"], nav a:has-text("Actions")',
+        selector: 'nav a[href*="/actions"]',
         title: { ja: 'GitHub Actions' },
         description: {
             ja: 'CI/CDとワークフロー自動化のプラットフォーム。プッシュやPRをトリガーにテスト、ビルド、デプロイを自動実行できます。',
@@ -709,7 +709,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-job',
-        selector: 'a[href*="/runs"], div:has-text("Job")',
+        selector: 'a[href*="/runs"]',
         title: { ja: 'ジョブ' },
         description: {
             ja: 'ワークフロー内の実行単位。同一ランナー上で順次実行されるステップの集合。複数ジョブは並列または依存関係付きで実行可能です。',
@@ -718,7 +718,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-runner',
-        selector: 'a[href*="/settings/actions/runners"], span:has-text("Runner")',
+        selector: 'a[href*="/settings/actions/runners"]',
         title: { ja: 'ランナー' },
         description: {
             ja: 'ワークフローを実行するサーバー。GitHubがホストする仮想環境か、自分で管理するセルフホストランナーを選択できます。',
@@ -727,7 +727,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-artifact',
-        selector: 'span:has-text("Artifacts"), a[href*="/artifacts"]',
+        selector: 'a[href*="/artifacts"]',
         title: { ja: 'アーティファクト' },
         description: {
             ja: 'ワークフロー実行で生成されたファイル。ビルド成果物、テストレポート、ログなどをジョブ間で共有したりダウンロードできます。',
@@ -736,7 +736,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-secrets',
-        selector: 'a[href*="/settings/secrets"], span:has-text("Secrets")',
+        selector: 'a[href*="/settings/secrets"]',
         title: { ja: 'シークレット' },
         description: {
             ja: 'ワークフローで使用する機密情報（APIキー、パスワードなど）。暗号化されて保存され、ログにはマスクされて表示されます。',
@@ -745,7 +745,7 @@ export const actionsWorkflowEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-dependabot',
-        selector: 'a[href*="/security/dependabot"], span:has-text("Dependabot")',
+        selector: 'a[href*="/security/dependabot"]',
         title: { ja: 'Dependabot' },
         description: {
             ja: '依存関係を自動で監視・更新するGitHubの機能。セキュリティ脆弱性の検出とバージョン更新PRの自動作成を行います。',

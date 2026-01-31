@@ -106,10 +106,12 @@ export const repositoryEntries: DictionaryEntry[] = [
 
     // Clone関連
     // NOTE: 'Clone'エントリは git-operations.ts (id: 'git-clone') にも定義されている。
-    // 意図的な重複：リポジトリUIでは最初に 'repo-clone' がマッチし、git-operationsエントリは使用されない。
-    // この順序依存性は replacer.ts の処理順序によって制御される。
-    // 将来的には、Cloneの出現コンテキスト（リポジトリUIか一般的なGit操作か）に応じて
-    // urlPattern で明確に分け、または単一の共有エントリ (git-operations) に統一することを検討。
+    // 処理順序：allEntries (src/dictionary/entries/index.ts) では gitOperationsEntries が
+    //         repositoryEntries より先に配列されているため、'git-clone' が先にマッチする。
+    // 実際の動作：replacer.ts は allEntries を順序通り処理し、最初にマッチしたエントリが使用される。
+    //           そのため、このエントリ (repo-clone) は実質的には機能しない。
+    // 推奨：(A) このエントリを削除する、または (B) urlPattern を追加してコンテキストを区別する。
+    //      例: urlPattern: '/issues?.*' として、issues/PRページのみに限定。
     {
         type: 'replace',
         id: 'repo-clone',

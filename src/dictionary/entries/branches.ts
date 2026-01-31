@@ -217,7 +217,7 @@ export const branchEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-merge',
-        selector: '[data-testid="merge-button"], .merge-btn, button:has-text("Merge")',
+        selector: '[data-testid="merge-button"], .merge-btn',
         title: { ja: 'マージ' },
         description: {
             ja: '別のブランチの変更を現在のブランチに統合します。コンフリクトがある場合は手動での解決が必要です。',
@@ -226,7 +226,7 @@ export const branchEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-branches',
-        selector: 'a[href*="/branches"], nav a:has-text("Branches")',
+        selector: 'a[href*="/branches"]',
         title: { ja: 'ブランチ' },
         description: {
             ja: 'ブランチは独立した開発ラインです。メインの開発ラインに影響を与えずに機能開発やバグ修正を行えます。',

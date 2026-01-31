@@ -314,7 +314,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-reviewers',
-        selector: '#reviewers-select-menu, .js-reviewer-suggestions, [data-testid="reviewers-select-menu"], [aria-label*="Reviewer"], button[aria-expanded][aria-haspopup="dialog"] > span:has-text("Request a review")',
+        selector: '#reviewers-select-menu, .js-reviewer-suggestions, [data-testid="reviewers-select-menu"], [aria-label*="Reviewer"], button[aria-expanded][aria-haspopup="dialog"]',
         title: { ja: 'レビュアー' },
         description: {
             ja: 'プルリクエストの変更内容をレビューする担当者。コードの品質確認やフィードバックを行います。',
@@ -332,7 +332,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-draft',
-        selector: '[data-testid="draft-badge"], .IssueLabel--draft, [aria-label*="Draft"], span:has-text("Draft")',
+        selector: '[data-testid="draft-badge"], .IssueLabel--draft, [aria-label*="Draft"]',
         title: { ja: 'ドラフト' },
         description: {
             ja: '作業中のプルリクエストを示します。ドラフト状態ではマージできず、準備完了になるまでレビューは任意です。',

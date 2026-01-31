@@ -1031,7 +1031,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-visibility',
-        selector: 'span:has-text("Public"), span:has-text("Private")',
+        selector: 'span[data-visibility-label]',
         title: { ja: '可視性' },
         description: {
             ja: 'Public: 誰でもアクセス可能。Private: 招待されたコラボレーターのみアクセス可能。Internal: 組織メンバーのみ（Enterprise）。',
@@ -1040,7 +1040,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-archive',
-        selector: '[class*="archive"], span:has-text("Archived")',
+        selector: '[class*="archive"]',
         title: { ja: 'アーカイブ' },
         description: {
             ja: '読み取り専用になったリポジトリ。新しいイシューやPRは作成できませんが、コードとヒストリーは保持されます。',

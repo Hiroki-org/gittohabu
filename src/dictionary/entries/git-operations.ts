@@ -240,7 +240,7 @@ export const gitOperationsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-git-commit',
-        selector: '[data-testid="commit-button"], button:has-text("Commit")',
+        selector: '[data-testid="commit-button"]',
         title: { ja: 'コミット' },
         description: {
             ja: '変更をリポジトリの履歴に記録します。コミットメッセージで変更内容を説明することが推奨されます。',
@@ -249,7 +249,7 @@ export const gitOperationsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-git-push',
-        selector: '[data-testid="push-button"], button:has-text("Push")',
+        selector: '[data-testid="push-button"]',
         title: { ja: 'プッシュ' },
         description: {
             ja: 'ローカルのコミットをリモートリポジトリ（GitHub）に送信します。',
@@ -258,7 +258,7 @@ export const gitOperationsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-git-pull',
-        selector: '[data-testid="pull-button"], button:has-text("Pull")',
+        selector: '[data-testid="pull-button"]',
         title: { ja: 'プル' },
         description: {
             ja: 'リモートリポジトリから変更を取得し、ローカルブランチにマージします。',
@@ -267,7 +267,7 @@ export const gitOperationsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-git-fetch',
-        selector: '[data-testid="fetch-button"], button:has-text("Fetch")',
+        selector: '[data-testid="fetch-button"]',
         title: { ja: 'フェッチ' },
         description: {
             ja: 'リモートリポジトリから変更を取得しますが、マージは行いません。変更を確認してから手動でマージできます。',
@@ -276,7 +276,7 @@ export const gitOperationsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-git-blame',
-        selector: 'a[href*="/blame/"], button:has-text("Blame")',
+        selector: 'a[href*="/blame/"]',
         title: { ja: 'ブレーム' },
         description: {
             ja: 'ファイルの各行について、最後に変更したコミットと作者を表示します。いつ、誰が変更したかを追跡するのに便利です。',

@@ -627,7 +627,7 @@ export const usersOrgsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-followers',
-        selector: 'a[href*="/followers"], span:has-text("Followers")',
+        selector: 'a[href*="/followers"]',
         title: { ja: 'フォロワー' },
         description: {
             ja: 'このユーザーをフォローしている人の数。フォローすると、そのユーザーのアクティビティがフィードに表示されます。',
@@ -636,7 +636,7 @@ export const usersOrgsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-following',
-        selector: 'a[href*="/following"], span:has-text("Following")',
+        selector: 'a[href*="/following"]',
         title: { ja: 'フォロー中' },
         description: {
             ja: 'このユーザーがフォローしている人の数。フォロー中のユーザーのアクティビティを追跡できます。',
@@ -645,7 +645,7 @@ export const usersOrgsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-collaborators',
-        selector: 'a[href*="/collaborators"], a[href*="/access"], button:has-text("Collaborators")',
+        selector: 'a[href*="/collaborators"], a[href*="/access"]',
         title: { ja: 'コラボレーター' },
         description: {
             ja: 'リポジトリに直接アクセスできる共同作業者。Push権限などを持ち、プロジェクトに貢献できます。',
@@ -663,7 +663,7 @@ export const usersOrgsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-teams',
-        selector: 'a[href*="/teams"], button:has-text("Teams")',
+        selector: 'a[href*="/teams"]',
         title: { ja: 'チーム' },
         description: {
             ja: '組織内のメンバーグループ。リポジトリへのアクセス権限をチーム単位で管理できます。',

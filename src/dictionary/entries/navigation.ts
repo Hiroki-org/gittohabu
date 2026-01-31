@@ -503,7 +503,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-code',
-        selector: 'nav[aria-label="Repository"] a[data-tab-item="i2code-tab"], nav a:has-text("Code")',
+        selector: 'nav[aria-label="Repository"] a[data-tab-item="i2code-tab"]',
         title: { ja: 'コード' },
         description: {
             ja: 'リポジトリのソースコードとファイルを閲覧できます。ブランチやタグの切り替えも可能です。',
@@ -521,7 +521,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-security',
-        selector: 'nav a[href*="/security"], nav a:has-text("Security")',
+        selector: 'nav a[href*="/security"]',
         title: { ja: 'セキュリティ' },
         description: {
             ja: 'セキュリティポリシー、依存関係の脆弱性アラート、シークレットスキャンなどを管理します。',
@@ -530,7 +530,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-insights',
-        selector: 'nav a[href*="/pulse"], nav a[href*="/graphs"], nav a:has-text("Insights")',
+        selector: 'nav a[href*="/pulse"], nav a[href*="/graphs"]',
         title: { ja: 'インサイト' },
         description: {
             ja: 'リポジトリの活動状況、コントリビューター統計、コード頻度などの分析データを表示します。',
@@ -539,7 +539,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-settings',
-        selector: 'nav a[href*="/settings"], nav a:has-text("Settings")',
+        selector: 'nav a[href*="/settings"]',
         title: { ja: '設定' },
         description: {
             ja: 'リポジトリの設定を管理します。ブランチ保護、Webhook、アクセス権限などを設定できます。',
