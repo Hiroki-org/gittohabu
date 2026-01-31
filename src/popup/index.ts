@@ -10,8 +10,7 @@ const hotReloadButton = document.getElementById('hot-reload') as HTMLButtonEleme
  * GitHubタブにメッセージを送信
  */
 async function sendMessageToGitHubTabs(message: {
-  type: string;
-  enabled?: boolean;
+  type: 'hotReload' | 'getStatus';
 }): Promise<void> {
   try {
     const tabs = await chrome.tabs.query({ url: 'https://github.com/*' });
@@ -67,8 +66,7 @@ toggle?.addEventListener('change', () => {
       return;
     }
     renderStatus(enabled);
-    // 即座にGitHubタブに反映
-    sendMessageToGitHubTabs({ type: 'toggle', enabled });
+    // storage.onChanged で自動的にコンテンツスクリプトへ反映される
   });
 });
 

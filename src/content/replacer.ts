@@ -200,13 +200,13 @@ export function restoreAll(): void {
  */
 export function hotReload(): void {
   console.log('[gittohabu] ホットリロード開始...');
-  
+
   // 一旦全ての置換を元に戻す
   restoreAll();
-  
+
   // WeakMapのエントリもクリア（新しいノードとして扱う）
   // WeakMapは直接クリアできないので、replacedNodesをクリアするだけで十分
-  
+
   // 有効な場合は再度置換を実行
   if (isEnabled) {
     // 少し遅延させてDOMの更新を待つ

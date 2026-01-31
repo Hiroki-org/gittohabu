@@ -4,7 +4,7 @@ import { isReplaceEnabled, replaceAll, restoreAll, hotReload, setEnabled, setRep
 import { setHoverEntries, setHoverEnabled } from './hover';
 
 /** メッセージの型定義 */
-interface GittohaubuMessage {
+interface GittohabulMessage {
   type: 'toggle' | 'hotReload' | 'getStatus';
   enabled?: boolean;
 }
@@ -84,16 +84,10 @@ async function start(): Promise<void> {
     }
   });
 
-  // メッセージリスナー（即時反映用）
+  // メッセージリスナー（hotReload と getStatus のみ処理、toggle は storage.onChanged で十分）
   chrome.runtime.onMessage.addListener(
-    (message: GittohaubuMessage, _sender, sendResponse) => {
+    (message: GittohabulMessage, _sender, sendResponse) => {
       switch (message.type) {
-        case 'toggle':
-          if (typeof message.enabled === 'boolean') {
-            handleToggle(message.enabled);
-          }
-          sendResponse({ success: true });
-          break;
         case 'hotReload':
           hotReload();
           sendResponse({ success: true });
