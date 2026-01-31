@@ -72,19 +72,40 @@ export const pullRequestEntries: DictionaryEntry[] = [
         caseSensitive: false,
     },
 
-    // Review関連
+    // Review関連 (長いフレーズを最初に処理して、短いサブストリングの誤マッチを防ぐ)
     {
         type: 'replace',
-        id: 'pr-review',
-        from: 'Review',
-        to: { ja: 'レビュー' },
+        id: 'pr-request-reviewers',
+        from: 'Request reviewers',
+        to: { ja: 'レビュアーをリクエスト' },
         caseSensitive: false,
     },
     {
         type: 'replace',
-        id: 'pr-reviews',
-        from: 'Reviews',
-        to: { ja: 'レビュー' },
+        id: 'pr-request-review',
+        from: 'Request review',
+        to: { ja: 'レビューをリクエスト' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'pr-add-your-review',
+        from: 'Add your review',
+        to: { ja: 'レビューを追加' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'pr-pending-review',
+        from: 'Pending review',
+        to: { ja: '保留中のレビュー' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'pr-submit-review',
+        from: 'Submit review',
+        to: { ja: 'レビューを送信' },
         caseSensitive: false,
     },
     {
@@ -110,55 +131,13 @@ export const pullRequestEntries: DictionaryEntry[] = [
     },
     {
         type: 'replace',
-        id: 'pr-request-review',
-        from: 'Request review',
-        to: { ja: 'レビューをリクエスト' },
-        caseSensitive: false,
-    },
-    {
-        type: 'replace',
-        id: 'pr-request-reviewers',
-        from: 'Request reviewers',
-        to: { ja: 'レビュアーをリクエスト' },
-        caseSensitive: false,
-    },
-    {
-        type: 'replace',
-        id: 'pr-pending-review',
-        from: 'Pending review',
-        to: { ja: '保留中のレビュー' },
-        caseSensitive: false,
-    },
-    {
-        type: 'replace',
-        id: 'pr-submit-review',
-        from: 'Submit review',
-        to: { ja: 'レビューを送信' },
-        caseSensitive: false,
-    },
-    {
-        type: 'replace',
-        id: 'pr-add-your-review',
-        from: 'Add your review',
-        to: { ja: 'レビューを追加' },
+        id: 'pr-review',
+        from: 'Review',
+        to: { ja: 'レビュー' },
         caseSensitive: false,
     },
 
-    // Approve/Changes関連
-    {
-        type: 'replace',
-        id: 'pr-approve',
-        from: 'Approve',
-        to: { ja: '承認' },
-        caseSensitive: false,
-    },
-    {
-        type: 'replace',
-        id: 'pr-approved',
-        from: 'Approved',
-        to: { ja: '承認済み' },
-        caseSensitive: false,
-    },
+    // Approve/Changes関連 (長いフレーズを最初に処理)
     {
         type: 'replace',
         id: 'pr-request-changes',
@@ -175,16 +154,25 @@ export const pullRequestEntries: DictionaryEntry[] = [
     },
     {
         type: 'replace',
-        id: 'pr-comment',
-        from: 'Comment',
-        to: { ja: 'コメント' },
+        id: 'pr-approved',
+        from: 'Approved',
+        to: { ja: '承認済み' },
         caseSensitive: false,
     },
     {
         type: 'replace',
-        id: 'pr-comments',
-        from: 'Comments',
-        to: { ja: 'コメント' },
+        id: 'pr-approve',
+        from: 'Approve',
+        to: { ja: '承認' },
+        caseSensitive: false,
+    },
+
+    // Comment関連 (長いフレーズを最初に処理)
+    {
+        type: 'replace',
+        id: 'pr-leave-a-comment',
+        from: 'Leave a comment',
+        to: { ja: 'コメントを残す' },
         caseSensitive: false,
     },
     {
@@ -196,9 +184,16 @@ export const pullRequestEntries: DictionaryEntry[] = [
     },
     {
         type: 'replace',
-        id: 'pr-leave-a-comment',
-        from: 'Leave a comment',
-        to: { ja: 'コメントを残す' },
+        id: 'pr-comments',
+        from: 'Comments',
+        to: { ja: 'コメント' },
+        caseSensitive: false,
+    },
+    {
+        type: 'replace',
+        id: 'pr-comment',
+        from: 'Comment',
+        to: { ja: 'コメント' },
         caseSensitive: false,
     },
 

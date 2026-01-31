@@ -11,9 +11,13 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'replace',
         id: 'time-ago',
+        // REMOVED: 'ago' is too generic and causes false positives (e.g., "Chicago", "2 seconds ago").
+        // Use specific entries like 'time-second-ago', 'time-minute-ago' instead.
+        // This entry has been deprecated - prefer longer, specific phrases.
         from: 'ago',
         to: { ja: '前' },
         caseSensitive: false,
+        urlPattern: '(?!)',  // Never match (negative lookahead that always fails)
     },
     {
         type: 'replace',
@@ -761,7 +765,8 @@ export const uiElementsEntries: DictionaryEntry[] = [
         id: 'dialog-yes',
         from: 'Yes',
         to: { ja: 'はい' },
-        caseSensitive: false,
+        caseSensitive: true,  // Avoid matching "Yesterday", "Yeses", etc.
+        urlPattern: '/(issues|pull|settings)/',  // Scope to form/dialog contexts
     },
     {
         type: 'replace',

@@ -447,7 +447,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-contributor',
-        selector: 'a[href*="/graphs/contributors"], nav a:has-text("Contributors")',
+        selector: 'a[href*="/graphs/contributors"]',
         title: { ja: 'コントリビューター' },
         description: {
             ja: 'リポジトリに貢献した人々。コードのコミット、イシューの報告、プルリクエストの作成などで貢献できます。',
@@ -456,7 +456,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-release',
-        selector: 'a[href*="/releases"], nav a:has-text("Releases")',
+        selector: 'a[href*="/releases"]',
         title: { ja: 'リリース' },
         description: {
             ja: 'ソフトウェアの配布可能なバージョン。タグに関連付けられ、変更履歴やバイナリファイルを含められます。',
