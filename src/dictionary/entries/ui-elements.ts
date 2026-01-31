@@ -260,8 +260,8 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'replace',
         id: 'month-short-mar',
-        from: 'Mar',
-        to: { ja: '3月' },
+        from: 'Mar ',
+        to: { ja: '3月 ' },
         caseSensitive: true,
     },
     {
@@ -594,8 +594,8 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'replace',
         id: 'page-of',
-        from: 'of',
-        to: { ja: '/' },
+        from: ' of ',
+        to: { ja: ' / ' },
         caseSensitive: false,
     },
 

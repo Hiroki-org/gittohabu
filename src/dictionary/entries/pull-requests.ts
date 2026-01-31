@@ -274,14 +274,14 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'replace',
         id: 'pr-squash-and-merge',
         from: 'Squash and merge',
-        to: { ja: 'スカッシュマージ' },
+        to: { ja: 'スカッシュしてマージ' },
         caseSensitive: false,
     },
     {
         type: 'replace',
         id: 'pr-rebase-and-merge',
         from: 'Rebase and merge',
-        to: { ja: 'リベースマージ' },
+        to: { ja: 'リベースしてマージ' },
         caseSensitive: false,
     },
     {
@@ -302,7 +302,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'replace',
         id: 'pr-confirm-squash-and-merge',
         from: 'Confirm squash and merge',
-        to: { ja: 'スカッシュマージを確認' },
+        to: { ja: 'スカッシュしてマージを確認' },
         caseSensitive: false,
     },
 

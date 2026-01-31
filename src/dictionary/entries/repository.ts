@@ -22,13 +22,7 @@ export const repositoryEntries: DictionaryEntry[] = [
         to: { ja: 'リポジトリ' },
         caseSensitive: false,
     },
-    {
-        type: 'replace',
-        id: 'repo-repo',
-        from: 'Repo',
-        to: { ja: 'リポジトリ' },
-        caseSensitive: false,
-    },
+    // 'Repo'は'Report'等と部分マッチするため削除
     {
         type: 'replace',
         id: 'repo-create-repository',
@@ -71,20 +65,7 @@ export const repositoryEntries: DictionaryEntry[] = [
         to: { ja: 'プライベートリポジトリ' },
         caseSensitive: false,
     },
-    {
-        type: 'replace',
-        id: 'repo-public',
-        from: 'Public',
-        to: { ja: 'パブリック' },
-        caseSensitive: true,
-    },
-    {
-        type: 'replace',
-        id: 'repo-private',
-        from: 'Private',
-        to: { ja: 'プライベート' },
-        caseSensitive: true,
-    },
+    // Public/Privateはui-elements.tsで定義済み
 
     // Fork関連
     {
