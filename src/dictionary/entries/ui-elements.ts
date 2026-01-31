@@ -766,9 +766,9 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'replace',
         id: 'dialog-no',
-        from: 'No',
+        from: 'No,',
         to: { ja: 'いいえ' },
-        caseSensitive: false,
+        caseSensitive: true,
     },
     {
         type: 'replace',
