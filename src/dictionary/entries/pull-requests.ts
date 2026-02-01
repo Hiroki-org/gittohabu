@@ -342,7 +342,8 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-conversation-tab',
-        selector: 'a[href*="/pull/"][href$=""], [data-tab-item="conversation-tab"]',
+        selector: '#conversation-tab, [data-tab-item="conversation-tab"]',
+        urlPattern: '/pull/',
         title: { ja: 'Conversationタブ' },
         description: {
             ja: 'PRの概要、説明、コメントのやり取りを表示。タイムラインでレビューやコミットの履歴を確認できます。',
@@ -564,7 +565,8 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-close',
-        selector: '.js-comment-and-button[value="close"], [data-testid="close-button"]',
+        selector: '[data-testid="close-pull-request-button"], .js-comment-and-button[value="close"][formaction*="/pull/"]',
+        urlPattern: '/pull/',
         title: { ja: 'PRをクローズ' },
         description: {
             ja: 'PRをマージせずに閉じます。変更が不要になった場合や、別のPRで対応する場合に使用します。',
@@ -573,7 +575,8 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-reopen',
-        selector: '.js-comment-and-button[name="comment_and_open"]',
+        selector: '.js-comment-and-button[name="comment_and_open"][formaction*="/pull/"]',
+        urlPattern: '/pull/',
         title: { ja: 'PRを再オープン' },
         description: {
             ja: 'クローズされたPRを再度オープンします。追加の作業が必要になった場合に使用します。',
@@ -600,7 +603,8 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-linked-issues',
-        selector: '.js-issue-sidebar-form[data-linked-issue], .development-section',
+        selector: '.js-issue-sidebar-form[data-linked-issue]',
+        urlPattern: '/pull/',
         title: { ja: 'リンクされたイシュー' },
         description: {
             ja: 'このPRがクローズするイシュー。「Fixes #123」のようにコミットやPR説明に書くと自動でリンクされます。',

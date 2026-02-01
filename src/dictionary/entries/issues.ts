@@ -400,7 +400,8 @@ export const issueEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-issue-close-button',
-        selector: '.js-comment-and-button[value="close"], [data-testid="close-issue-button"]',
+        selector: '[data-testid="close-issue-button"], .js-comment-and-button[value="close"][formaction*="/issues/"]',
+        urlPattern: '/issues/',
         title: { ja: 'イシューをクローズ' },
         description: {
             ja: 'イシューを解決済みとしてクローズします。コメントを追加して理由を説明することもできます。',
@@ -409,7 +410,8 @@ export const issueEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-issue-reopen',
-        selector: '.js-comment-and-button[name="comment_and_open"]',
+        selector: '.js-comment-and-button[name="comment_and_open"][formaction*="/issues/"]',
+        urlPattern: '/issues/',
         title: { ja: 'イシューを再オープン' },
         description: {
             ja: 'クローズされたイシューを再度オープンします。追加の対応が必要な場合に使用します。',
@@ -428,7 +430,8 @@ export const issueEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-issue-linked-prs',
-        selector: '.js-issue-sidebar-form[data-linked-pr], .development-section',
+        selector: '.js-issue-sidebar-form[data-linked-pr]',
+        urlPattern: '/issues/',
         title: { ja: 'リンクされたPR' },
         description: {
             ja: 'このイシューを解決するプルリクエスト。PRがマージされるとイシューが自動的にクローズされます。',

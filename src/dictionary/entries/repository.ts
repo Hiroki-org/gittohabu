@@ -695,7 +695,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-public-badge',
-        selector: '.Label--secondary:has(.octicon-repo), span.Label:contains("Public"), .repo-private-label-lockup .Label',
+        selector: '.Label--secondary[title="Public"], span.Label[title="Public"], .repo-private-label-lockup .Label, [data-testid="repo-visibility-badge"]:not([title*="Private"])',
         title: { ja: 'パブリック' },
         description: {
             ja: 'このリポジトリは公開されており、誰でもアクセス・クローン可能です。検索結果にも表示されます。',
@@ -704,7 +704,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-private-badge',
-        selector: '.Label--attention:has(.octicon-lock), span.Label:contains("Private"), .private-label',
+        selector: '.Label--attention[title="Private"], span.Label[title="Private"], .private-label, [data-testid="repo-visibility-badge"][title*="Private"]',
         title: { ja: 'プライベート' },
         description: {
             ja: 'このリポジトリは非公開で、招待されたコラボレーターのみがアクセスできます。検索結果には表示されません。',
@@ -713,7 +713,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-archived-badge',
-        selector: '.Label--warning:has(.octicon-archive), [aria-label*="archived"], .flash-warn:has(.octicon-archive)',
+        selector: '.Label--warning[aria-label*="archived"], [aria-label*="archived"], .flash-warn .octicon-archive',
         title: { ja: 'アーカイブ済み' },
         description: {
             ja: 'このリポジトリは読み取り専用になっています。新しいコミット、イシュー、プルリクエストは作成できませんが、クローンやフォークは可能です。',
@@ -722,7 +722,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-template-badge',
-        selector: '.Label:contains("Template"), [aria-label*="template"], .octicon-repo-template',
+        selector: 'span.Label[title="Template"], [aria-label*="template"], .octicon-repo-template',
         title: { ja: 'テンプレート' },
         description: {
             ja: 'このリポジトリはテンプレートとして設定されています。「Use this template」から新しいリポジトリをこのテンプレートを元に作成できます。',
@@ -731,7 +731,7 @@ export const repositoryEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-repo-use-template',
-        selector: 'a[href*="/generate"], button:has([data-ga-click*="Use this template"])',
+        selector: 'a[href*="/generate"], button[data-ga-click*="Use this template"]',
         title: { ja: 'テンプレートを使用' },
         description: {
             ja: 'このテンプレートリポジトリを元に新しいリポジトリを作成します。フォークと異なり、履歴は継承されず新しいリポジトリとして開始されます。',

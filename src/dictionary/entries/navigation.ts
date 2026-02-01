@@ -598,7 +598,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-go-to-file',
-        selector: 'a[data-hotkey="t"], button:has-text("Go to file")',
+        selector: 'a[data-hotkey="t"], button[aria-label*="file" i], button[data-testid="go-to-file-button"]',
         title: { ja: 'ファイルへ移動' },
         description: {
             ja: 'ファインダーを開いてファイル名で検索し、素早く移動できます。キーボードショートカット「t」でも起動可能。',
@@ -607,7 +607,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-add-file',
-        selector: 'details summary:has-text("Add file"), [data-target="get-repo.addFileSummary"]',
+        selector: 'details summary[aria-label*="Add file" i], [data-target="get-repo.addFileSummary"]',
         title: { ja: 'ファイル追加' },
         description: {
             ja: '新しいファイルをブラウザ上で作成するか、ローカルからアップロードできます。コミットメッセージも指定可能。',
@@ -627,7 +627,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-raw-button',
-        selector: 'a[data-view-component="true"][href*="/raw/"], a.btn:has-text("Raw")',
+        selector: 'a[data-view-component="true"][href*="/raw/"], a[href*="/raw/"]',
         title: { ja: 'Raw' },
         description: {
             ja: 'ファイルの生データを表示。フォーマットなしのテキストとして取得でき、直接ダウンロードも可能です。',
@@ -636,7 +636,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-blame-button',
-        selector: 'a[data-view-component="true"][href*="/blame/"], a.btn:has-text("Blame")',
+        selector: 'a[data-view-component="true"][href*="/blame/"], a[href*="/blame/"]',
         title: { ja: 'Blame' },
         description: {
             ja: '各行を最後に変更したコミットと作者を表示。誰がいつ何のために変更したかを追跡できます。',
@@ -645,7 +645,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-history-button',
-        selector: 'a[href*="/commits/"], a.btn:has-text("History")',
+        selector: 'a[href*="/commits/"], a[aria-label*="History" i]',
         title: { ja: '履歴' },
         description: {
             ja: 'このファイルの変更履歴（コミット一覧）を表示。過去のバージョンを確認・比較できます。',
@@ -701,7 +701,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-compare-pr',
-        selector: 'a[href*="/compare/"], a.btn:has-text("Compare")',
+        selector: 'a[href*="/compare/"]',
         title: { ja: 'Compare & Pull request' },
         description: {
             ja: 'ブランチ間の差分を比較し、プルリクエストを作成します。最近プッシュしたブランチがある場合に表示されます。',
@@ -723,7 +723,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-about-edit',
-        selector: 'button[aria-label="Edit repository metadata"], a[href*="/settings"]:has-text("Edit")',
+        selector: 'button[aria-label="Edit repository metadata"], a[href*="/settings"][aria-label*="Edit" i]',
         title: { ja: 'リポジトリ情報編集' },
         description: {
             ja: 'リポジトリの説明文、ウェブサイトURL、トピックを編集します。検索性向上のためトピック設定を推奨。',
@@ -752,7 +752,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-explore',
-        selector: 'a[href="/explore"], a:has-text("Explore")',
+        selector: 'a[href="/explore"]',
         title: { ja: 'Explore' },
         description: {
             ja: 'トレンドリポジトリ、トピック、コレクション、開発者を発見。新しいプロジェクトやツールを見つけられます。',
@@ -761,7 +761,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-marketplace',
-        selector: 'a[href="/marketplace"], a:has-text("Marketplace")',
+        selector: 'a[href="/marketplace"]',
         title: { ja: 'Marketplace' },
         description: {
             ja: 'GitHub Actions、GitHub Appsなどの拡張機能を検索・インストール。CI/CD、コードレビューツールなど多数。',
@@ -770,7 +770,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-trending',
-        selector: 'a[href="/trending"], a:has-text("Trending")',
+        selector: 'a[href="/trending"]',
         title: { ja: 'トレンド' },
         description: {
             ja: '今日/今週/今月で人気上昇中のリポジトリ一覧。言語やトピックでフィルタ可能です。',
@@ -781,7 +781,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-filter-menu',
-        selector: 'details-menu[src*="filter"], .subnav-search-context, button:has-text("Filters")',
+        selector: 'details-menu[src*="filter"], .subnav-search-context, button[aria-label*="Filter" i]',
         title: { ja: 'フィルター' },
         description: {
             ja: '一覧を条件で絞り込み。著者、ラベル、マイルストーン、レビュー状況などで検索結果を限定できます。',
@@ -790,7 +790,7 @@ export const navigationEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-nav-sort-menu',
-        selector: 'details-menu[src*="sort"], select[name="sort"], button:has-text("Sort")',
+        selector: 'details-menu[src*="sort"], select[name="sort"], button[aria-label*="Sort" i]',
         title: { ja: '並び替え' },
         description: {
             ja: '一覧の並び順を変更。作成日、更新日、コメント数、リアクション数などで並べ替えられます。',
