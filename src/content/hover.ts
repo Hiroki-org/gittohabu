@@ -7,6 +7,8 @@ type CompiledHoverEntry = {
 };
 
 let compiledEntries: CompiledHoverEntry[] = [];
+let activeEntries: CompiledHoverEntry[] = [];
+let lastUrl: string | null = null;
 let isEnabled = false;
 let currentLang = 'ja';
 let currentAnchor: HTMLElement | null = null;
@@ -31,14 +33,15 @@ function handleMouseOver(e: MouseEvent) {
     return;
   }
 
-  for (const compiled of compiledEntries) {
-    // URL pattern check
-    if (compiled.urlPattern) {
-      if (!compiled.urlPattern.test(window.location.href)) {
-        continue;
-      }
-    }
+  const currentUrl = window.location.href;
+  if (currentUrl !== lastUrl) {
+    lastUrl = currentUrl;
+    activeEntries = compiledEntries.filter(
+      (compiled) => !compiled.urlPattern || compiled.urlPattern.test(currentUrl),
+    );
+  }
 
+  for (const compiled of activeEntries) {
     try {
       const anchor = target.closest(compiled.entry.selector);
       if (anchor instanceof HTMLElement) {
@@ -87,6 +90,9 @@ export function setHoverEntries(entries: HoverEntry[]): void {
     }
     return { entry, urlPattern };
   });
+  // Reset cache
+  lastUrl = null;
+  activeEntries = [];
 }
 
 export function setHoverEnabled(enabled: boolean): void {
