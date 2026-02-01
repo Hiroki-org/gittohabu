@@ -6,7 +6,21 @@ let scheduled = false;
 
 function flushPendingNodes(): void {
   scheduled = false;
-  for (const node of pendingNodes) {
+
+  const nodes = Array.from(pendingNodes);
+  // 祖先要素がpendingNodesに含まれている場合は、親の処理でカバーされるため除外する
+  const filteredNodes = nodes.filter((node) => {
+    let parent = node.parentNode;
+    while (parent) {
+      if (pendingNodes.has(parent)) {
+        return false;
+      }
+      parent = parent.parentNode;
+    }
+    return true;
+  });
+
+  for (const node of filteredNodes) {
     if (node.nodeType === Node.ELEMENT_NODE) {
       replaceTextInElement(node as Element);
     } else if (node.nodeType === Node.TEXT_NODE) {
