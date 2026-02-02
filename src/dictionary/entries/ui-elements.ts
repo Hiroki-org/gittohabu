@@ -1392,7 +1392,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-avatar',
-        selector: '.avatar, [class*="avatar"]',
+        selector: '.avatar, .Avatar, img.avatar, [data-testid="avatar"]',
         title: { ja: 'アバター' },
         description: {
             ja: 'ユーザーのプロフィール画像。クリックするとそのユーザーのプロフィールページに移動できます。',
@@ -1402,7 +1402,7 @@ export const uiElementsEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-counter-badge',
-        selector: '.Counter, [class*="counter"]',
+        selector: '.Counter, span.Counter',
         title: { ja: 'カウンターバッジ' },
         description: {
             ja: '数量を示すバッジ。未読通知数、イシュー数、コメント数などを表示します。',

@@ -323,7 +323,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-pr-merge-options',
-        selector: '.merge-message .btn-group-merge, [data-testid="merge-box"] .btn-group-merge, [data-testid="pull-request-merge-box"] buttongroup',
+        selector: '.merge-message .btn-group-merge, [data-testid="merge-box"] .btn-group-merge',
         title: { ja: 'マージオプション' },
         description: {
             ja: 'マージ方法を選択できます。マージコミット（履歴を保持）、スカッシュ（1つのコミットに圧縮）、リベース（履歴を直線化）から選べます。',
@@ -353,6 +353,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'hover',
         id: 'hover-pr-commits-tab',
         selector: 'a[href*="/commits"], [data-tab-item="commits-tab"]',
+        urlPattern: '/pull/',
         title: { ja: 'Commitsタブ' },
         description: {
             ja: 'このPRに含まれるすべてのコミットを一覧表示。各コミットの詳細や差分を確認できます。',
@@ -362,6 +363,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'hover',
         id: 'hover-pr-checks-tab',
         selector: 'a[href*="/checks"], [data-tab-item="checks-tab"]',
+        urlPattern: '/pull/',
         title: { ja: 'Checksタブ' },
         description: {
             ja: 'CI/CDパイプラインの実行結果を表示。テスト、リント、ビルドなどの自動チェックの状態を確認できます。',
@@ -371,6 +373,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'hover',
         id: 'hover-pr-files-changed-tab',
         selector: 'a[href*="/files"], [data-tab-item="files-changed-tab"]',
+        urlPattern: '/pull/',
         title: { ja: 'Files changedタブ' },
         description: {
             ja: '変更されたファイルの差分を表示。追加（緑）、削除（赤）がハイライトされ、行ごとにコメントを残せます。',
@@ -427,6 +430,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
         type: 'hover',
         id: 'hover-pr-review-comment',
         selector: '.review-comment, .js-comment, [data-testid="review-comment"]',
+        urlPattern: '/pull/',
         title: { ja: 'レビューコメント' },
         description: {
             ja: '特定の行やコードブロックに対するフィードバック。質問、提案、修正依頼などを記録できます。',

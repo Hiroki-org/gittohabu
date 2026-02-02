@@ -442,6 +442,7 @@ export const issueEntries: DictionaryEntry[] = [
         type: 'hover',
         id: 'hover-issue-reactions',
         selector: '.js-reaction-group-container, .comment-reactions',
+        urlPattern: '/issues/',
         title: { ja: 'リアクション' },
         description: {
             ja: 'イシューやコメントへの絵文字リアクション。👍で賛同、🎉で祝福、😕で困惑などを表現できます。',
