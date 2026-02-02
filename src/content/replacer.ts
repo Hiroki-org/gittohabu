@@ -46,6 +46,12 @@ class ReplacementCache {
 
 const entryCache = new ReplacementCache();
 
+/** 元のテキストを保持するマップ (WeakMapでメモリリークを防ぐ) */
+const originalTextMap = new WeakMap<Text, string>();
+
+/** 置換済みのテキストノードを追跡 */
+const replacedNodes = new Set<WeakRef<Text>>();
+
 /** 置換が有効かどうか */
 let isEnabled = true;
 
@@ -114,9 +120,15 @@ export function setLanguage(lang: string): void {
 export function replaceTextNode(node: Text): void {
   if (!isEnabled) return;
 
-  let text = node.textContent;
-  if (!text) return;
+  // 元のテキストを保持（初回のみ）
+  if (!originalTextMap.has(node)) {
+    originalTextMap.set(node, node.textContent ?? '');
+  }
 
+  const originalText = originalTextMap.get(node);
+  if (!originalText) return;
+
+  let text = originalText;
   let modified = false;
 
   const entries = entryCache.get(compiledEntries);
@@ -135,6 +147,11 @@ export function replaceTextNode(node: Text): void {
 
   if (modified && text !== node.textContent) {
     node.textContent = text;
+    // 重複チェック：既にこのノードが追跡されているか確認
+    const isAlreadyTracked = Array.from(replacedNodes).some((weakRef) => weakRef.deref() === node);
+    if (!isAlreadyTracked) {
+      replacedNodes.add(new WeakRef(node));
+    }
   }
 }
 
@@ -174,14 +191,9 @@ export function replaceTextInElement(element: Element | Document): void {
     },
   );
 
-  const textNodes: Text[] = [];
   let currentNode: Node | null;
   while ((currentNode = walker.nextNode())) {
-    textNodes.push(currentNode as Text);
-  }
-
-  for (const textNode of textNodes) {
-    replaceTextNode(textNode);
+    replaceTextNode(currentNode as Text);
   }
 }
 
@@ -195,4 +207,47 @@ export function replaceAll(): void {
     return;
   }
   replaceTextInElement(rootElement);
+}
+
+/**
+ * 置換したテキストを元に戻す
+ */
+export function restoreAll(): void {
+  // 追跡しているノードを巡回して元のテキストに戻す
+  for (const weakRef of replacedNodes) {
+    const node = weakRef.deref();
+    if (node && originalTextMap.has(node)) {
+      const original = originalTextMap.get(node);
+      if (original !== undefined && node.textContent !== original) {
+        node.textContent = original;
+      }
+    }
+  }
+  replacedNodes.clear();
+  console.log('[gittohabu] テキストを元に戻しました');
+}
+
+/**
+ * キャッシュをクリアして再適用（ホットリロード）
+ */
+export function hotReload(): void {
+  console.log('[gittohabu] ホットリロード開始...');
+
+  // 一旦全ての置換を元に戻す
+  restoreAll();
+
+  // WeakMapのエントリもクリア（新しいノードとして扱う）
+  // WeakMapは直接クリアできないので、replacedNodesをクリアするだけで十分
+
+  // 有効な場合は再度置換を実行
+  if (isEnabled) {
+    // 少し遅延させてDOMの更新を待つ
+    requestAnimationFrame(() => {
+      replaceAll();
+      console.log('[gittohabu] ホットリロード完了');
+    });
+  } else {
+    // 無効な場合も完了ログを出力
+    console.log('[gittohabu] ホットリロード完了');
+  }
 }
