@@ -1,4 +1,4 @@
-import type { Dictionary, DictionaryEntry, HoverEntry, ReplaceEntry } from './schema';
+import type { Dictionary, DictionaryEntry, HoverEntry, ReplaceEntry, LocalizedText } from './schema';
 import { builtinDictionary } from './builtin';
 
 const STORAGE_KEY = 'gittohabu_user_dictionary';
@@ -39,7 +39,7 @@ export function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
   if (!entry || typeof entry !== 'object') {
     return false;
   }
-  const candidate = entry as DictionaryEntry;
+  const candidate = entry as Record<string, unknown>;
   if (candidate.type === 'replace') {
     return (
       typeof candidate.id === 'string' &&
@@ -58,11 +58,7 @@ export function isDictionaryEntry(entry: unknown): entry is DictionaryEntry {
   return false;
 }
 
-function isLocalizedText(value: unknown): value is DictionaryEntry['type'] extends 'replace'
-  ? DictionaryEntry['to']
-  : DictionaryEntry['type'] extends 'hover'
-    ? DictionaryEntry['title']
-    : never {
+function isLocalizedText(value: unknown): value is LocalizedText {
   if (!value || typeof value !== 'object') {
     return false;
   }
