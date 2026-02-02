@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!doctype html>
 <html lang="ja">
   <head>
     <meta charset="UTF-8" />
@@ -7,7 +7,11 @@
     <style>
       :root {
         color-scheme: dark;
-        font-family: 'Segoe UI', system-ui, -apple-system, sans-serif;
+        font-family:
+          "Segoe UI",
+          system-ui,
+          -apple-system,
+          sans-serif;
       }
 
       body {
@@ -95,7 +99,7 @@
       }
 
       .slider::before {
-        content: '';
+        content: "";
         position: absolute;
         height: 18px;
         width: 18px;
@@ -136,6 +140,42 @@
         background: #30363d;
       }
 
+      .button-primary {
+        background: #238636;
+        border-color: #238636;
+        color: #ffffff;
+      }
+
+      .button-primary:hover {
+        background: #2ea043;
+        border-color: #2ea043;
+      }
+
+      .button-primary:focus-visible {
+        outline: 2px solid #58a6ff;
+        outline-offset: 2px;
+      }
+
+      .button-primary:disabled {
+        background: #21262d;
+        border-color: #30363d;
+        color: #8b949e;
+        cursor: not-allowed;
+      }
+
+      .button-primary:disabled:focus-visible {
+        outline: none;
+      }
+
+      .button-row {
+        display: flex;
+        gap: 8px;
+      }
+
+      .button-row .button {
+        flex: 1;
+      }
+
       .spacer {
         height: 12px;
       }
@@ -159,6 +199,15 @@
         </label>
       </div>
       <div class="status-text" id="status-text">有効</div>
+      <div class="spacer"></div>
+      <button
+        id="hot-reload"
+        class="button button-primary"
+        type="button"
+        aria-label="ページの置換を再読み込み"
+      >
+        🔄 再読み込み
+      </button>
       <div class="spacer"></div>
       <button id="open-options" class="button" type="button">設定を開く</button>
     </main>

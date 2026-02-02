@@ -1,42 +1,31 @@
-import { loadDictionary, getReplaceEntries } from '../dictionary/loader';
+import { loadDictionary, getReplaceEntries, getHoverEntries } from '../dictionary/loader';
 import { startObserver, stopObserver } from './observer';
-import { isReplaceEnabled, replaceAll, setEnabled, setReplaceEntries } from './replacer';
-import { hideTooltip, showTooltip } from './tooltip';
+import { isReplaceEnabled, replaceAll, restoreAll, hotReload, setEnabled, setReplaceEntries } from './replacer';
+import { setHoverEntries, setHoverEnabled } from './hover';
+
+/** メッセージの型定義（hotReload と getStatus のみ、toggle は storage.onChanged で処理） */
+interface GittohabulMessage {
+  type: 'hotReload' | 'getStatus';
+}
 
 async function init(): Promise<void> {
   console.log('[gittohabu] Initializing...');
 
   const dictionary = await loadDictionary();
   const replaceEntries = getReplaceEntries(dictionary);
+  const hoverEntries = getHoverEntries(dictionary);
 
   setReplaceEntries(replaceEntries);
+  setHoverEntries(hoverEntries);
+
   const enabled = await loadEnabledState();
   setEnabled(enabled);
+  setHoverEnabled(enabled);
+
   if (enabled) {
     replaceAll();
     startObserver();
   }
-
-  // TODO: https://github.com/Hiroki-org/gittohabu/issues/5 ツールチップUI統合（hover設定の再利用）
-  document.querySelectorAll('.btn-primary').forEach((btn) => {
-    btn.addEventListener('mouseenter', (e: MouseEvent) => {
-      if (!(e.ctrlKey || e.metaKey)) {
-        return;
-      }
-      const anchor = e.currentTarget;
-      if (!(anchor instanceof HTMLElement)) {
-        return;
-      }
-      showTooltip({
-        anchor,
-        title: 'Create pull request',
-        text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
-      });
-    });
-    btn.addEventListener('mouseleave', () => {
-      hideTooltip();
-    });
-  });
 
   console.log('[gittohabu] Initialized with', replaceEntries.length, 'replace entries');
 }
@@ -44,7 +33,11 @@ async function init(): Promise<void> {
 async function refreshDictionary(): Promise<void> {
   const dictionary = await loadDictionary();
   const replaceEntries = getReplaceEntries(dictionary);
+  const hoverEntries = getHoverEntries(dictionary);
+
   setReplaceEntries(replaceEntries);
+  setHoverEntries(hoverEntries);
+
   if (isReplaceEnabled()) {
     replaceAll();
   }
@@ -74,19 +67,14 @@ function loadEnabledState(): Promise<boolean> {
 async function start(): Promise<void> {
   await init();
 
+  // ストレージ変更リスナー
   chrome.storage.onChanged.addListener((changes) => {
     if (changes.gittohabu_enabled) {
       const enabled = changes.gittohabu_enabled.newValue;
       if (typeof enabled !== 'boolean') {
         return;
       }
-      setEnabled(enabled);
-      if (enabled) {
-        replaceAll();
-        startObserver();
-      } else {
-        stopObserver();
-      }
+      handleToggle(enabled);
     }
     if (changes.gittohabu_user_dictionary) {
       refreshDictionary().catch((error) => {
@@ -94,6 +82,42 @@ async function start(): Promise<void> {
       });
     }
   });
+
+  // メッセージリスナー（hotReload と getStatus のみ処理、toggle は storage.onChanged で十分）
+  chrome.runtime.onMessage.addListener(
+    (message: GittohabulMessage, _sender, sendResponse) => {
+      switch (message.type) {
+        case 'hotReload':
+          hotReload();
+          sendResponse({ success: true });
+          break;
+        case 'getStatus':
+          sendResponse({ enabled: isReplaceEnabled() });
+          break;
+        default:
+          sendResponse({ success: false, error: 'Unknown message type' });
+      }
+      return true; // 非同期レスポンスを許可
+    },
+  );
+}
+
+/**
+ * トグル状態を即座に反映
+ */
+function handleToggle(enabled: boolean): void {
+  setEnabled(enabled);
+  setHoverEnabled(enabled);
+
+  if (enabled) {
+    replaceAll();
+    startObserver();
+    console.log('[gittohabu] 有効化しました');
+  } else {
+    stopObserver();
+    restoreAll();
+    console.log('[gittohabu] 無効化しました（テキストを元に戻しました）');
+  }
 }
 
 start().catch((error) => {
