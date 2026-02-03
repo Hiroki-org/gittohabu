@@ -35,10 +35,7 @@ function handleMouseOver(e: MouseEvent) {
 
   const currentUrl = window.location.href;
   if (currentUrl !== lastUrl) {
-    lastUrl = currentUrl;
-    activeEntries = compiledEntries.filter(
-      (compiled) => !compiled.urlPattern || compiled.urlPattern.test(currentUrl),
-    );
+    updateActiveEntries(currentUrl);
   }
 
   for (const compiled of activeEntries) {
@@ -90,9 +87,15 @@ export function setHoverEntries(entries: HoverEntry[]): void {
     }
     return { entry, urlPattern };
   });
-  // Reset cache
-  lastUrl = null;
-  activeEntries = [];
+  // Eagerly rebuild cache
+  updateActiveEntries(window.location.href);
+}
+
+function updateActiveEntries(url: string) {
+  lastUrl = url;
+  activeEntries = compiledEntries.filter(
+    (compiled) => !compiled.urlPattern || compiled.urlPattern.test(url),
+  );
 }
 
 export function setHoverEnabled(enabled: boolean): void {

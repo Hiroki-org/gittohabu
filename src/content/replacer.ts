@@ -12,6 +12,40 @@ type CompiledReplaceEntry = {
 /** 置換対象のエントリ一覧 */
 let compiledEntries: CompiledReplaceEntry[] = [];
 
+/**
+ * 有効なエントリのキャッシュを管理するクラス
+ */
+class ReplacementCache {
+  private activeEntries: CompiledReplaceEntry[] = [];
+  private cachedUrl: string | null = null;
+
+  /**
+   * キャッシュを無効化
+   */
+  invalidate(): void {
+    this.cachedUrl = null;
+    this.activeEntries = [];
+  }
+
+  /**
+   * 現在のURLに適用可能なエントリを取得
+   */
+  get(allEntries: CompiledReplaceEntry[]): CompiledReplaceEntry[] {
+    const currentUrl = window.location.href;
+    if (this.cachedUrl === currentUrl) {
+      return this.activeEntries;
+    }
+
+    this.activeEntries = allEntries.filter(
+      (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+    );
+    this.cachedUrl = currentUrl;
+    return this.activeEntries;
+  }
+}
+
+const entryCache = new ReplacementCache();
+
 /** 元のテキストを保持するマップ (WeakMapでメモリリークを防ぐ) */
 const originalTextMap = new WeakMap<Text, string>();
 
@@ -58,6 +92,8 @@ export function setReplaceEntries(entries: ReplaceEntry[]): void {
     }
   }
   compiledEntries = nextEntries;
+  // キャッシュをクリア
+  entryCache.invalidate();
 }
 
 /**
@@ -95,12 +131,9 @@ export function replaceTextNode(node: Text): void {
   let text = originalText;
   let modified = false;
 
-  for (const compiled of compiledEntries) {
-    // URLパターンがあればチェック
-    if (compiled.urlPattern && !compiled.urlPattern.test(window.location.href)) {
-      continue;
-    }
+  const entries = entryCache.get(compiledEntries);
 
+  for (const compiled of entries) {
     const replacement = compiled.entry.to[currentLang];
     if (!replacement) continue;
 
@@ -158,14 +191,9 @@ export function replaceTextInElement(element: Element | Document): void {
     },
   );
 
-  const textNodes: Text[] = [];
   let currentNode: Node | null;
   while ((currentNode = walker.nextNode())) {
-    textNodes.push(currentNode as Text);
-  }
-
-  for (const textNode of textNodes) {
-    replaceTextNode(textNode);
+    replaceTextNode(currentNode as Text);
   }
 }
 

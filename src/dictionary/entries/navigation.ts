@@ -500,58 +500,311 @@ export const navigationEntries: DictionaryEntry[] = [
     },
 
     // === Hover Entries ===
+    // リポジトリタブナビゲーション
     {
         type: 'hover',
         id: 'hover-nav-code',
-        selector: 'nav[aria-label="Repository"] a[data-tab-item="i2code-tab"]',
+        selector: 'nav[aria-label="Repository"] a[data-tab-item="i2code-tab"], a#code-tab',
         title: { ja: 'コード' },
         description: {
-            ja: 'リポジトリのソースコードとファイルを閲覧できます。ブランチやタグの切り替えも可能です。',
+            ja: 'リポジトリのソースコードとファイルを閲覧できます。ブランチやタグの切り替え、ファイルのダウンロードも可能です。',
         },
     },
     {
         type: 'hover',
         id: 'hover-nav-wiki',
-        selector: 'nav a[href*="/wiki"]',
+        selector: 'nav a[href*="/wiki"], a#wiki-tab',
         title: { ja: 'Wiki' },
         description: {
-            ja: 'プロジェクトのドキュメントを共同で作成・編集できるスペース。マークダウン形式で記述します。',
+            ja: 'プロジェクトのドキュメントを共同で作成・編集できるスペース。マークダウン形式で記述し、複数ページを階層化できます。',
         },
     },
     {
         type: 'hover',
         id: 'hover-nav-security',
-        selector: 'nav a[href*="/security"]',
+        selector: 'nav a[href*="/security"], a#security-tab',
         title: { ja: 'セキュリティ' },
         description: {
-            ja: 'セキュリティポリシー、依存関係の脆弱性アラート、シークレットスキャンなどを管理します。',
+            ja: 'セキュリティポリシー、依存関係の脆弱性アラート、シークレットスキャン、コードスキャンなどを管理します。',
         },
     },
     {
         type: 'hover',
         id: 'hover-nav-insights',
-        selector: 'nav a[href*="/pulse"], nav a[href*="/graphs"]',
+        selector: 'nav a[href*="/pulse"], nav a[href*="/graphs"], a#insights-tab',
         title: { ja: 'インサイト' },
         description: {
-            ja: 'リポジトリの活動状況、コントリビューター統計、コード頻度などの分析データを表示します。',
+            ja: 'リポジトリの活動状況、コントリビューター統計、コード頻度、依存関係グラフなどの分析データを表示します。',
         },
     },
     {
         type: 'hover',
         id: 'hover-nav-settings',
-        selector: 'nav a[href*="/settings"]',
+        selector: 'nav a[href*="/settings"], a#settings-tab',
         title: { ja: '設定' },
         description: {
-            ja: 'リポジトリの設定を管理します。ブランチ保護、Webhook、アクセス権限などを設定できます。',
+            ja: 'リポジトリの設定を管理。ブランチ保護ルール、Webhook、GitHub Apps、デプロイキー、アクセス権限などを設定できます。',
         },
     },
     {
         type: 'hover',
         id: 'hover-nav-discussions',
-        selector: 'nav a[href*="/discussions"]',
+        selector: 'nav a[href*="/discussions"], a#discussions-tab',
         title: { ja: 'ディスカッション' },
         description: {
-            ja: 'コミュニティとの対話スペース。Q&A、アイデア共有、お知らせなど、イシュー以外の会話に使います。',
+            ja: 'コミュニティとの対話スペース。Q&A、アイデア共有、お知らせなど、イシュー以外の会話に使います。投票機能もあります。',
+        },
+    },
+
+    // ヘッダーナビゲーション
+    {
+        type: 'hover',
+        id: 'hover-nav-search',
+        selector: 'button[data-target="qbsearch-input.inputButton"], input[name="q"], .header-search-wrapper',
+        title: { ja: '検索バー' },
+        description: {
+            ja: 'GitHub全体またはリポジトリ内を検索。コード、イシュー、PR、ユーザー、リポジトリを高度なフィルタで検索できます。「/」キーでフォーカス。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-notifications',
+        selector: 'a[href="/notifications"], notification-indicator',
+        title: { ja: '通知' },
+        description: {
+            ja: 'あなた宛ての通知一覧。メンション、レビュー依頼、Watch中のリポジトリの更新などが表示されます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-create-new',
+        selector: 'details[data-target*="create-menu"], .Header-link[href="/new"]',
+        title: { ja: '新規作成メニュー' },
+        description: {
+            ja: '新しいリポジトリ、Gist、組織、プロジェクトなどを作成するメニュー。インポートも可能です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-user-menu',
+        selector: 'details[data-target*="header-user"], summary.Header-link img.avatar',
+        title: { ja: 'ユーザーメニュー' },
+        description: {
+            ja: 'プロフィール、リポジトリ、スター、設定、サインアウトなどへのショートカット。テーマ切替やステータス設定もここから。',
+        },
+    },
+
+    // ファイルブラウザ関連
+    {
+        type: 'hover',
+        id: 'hover-nav-go-to-file',
+        selector: 'a[data-hotkey="t"], button[aria-label*="file" i], button[data-testid="go-to-file-button"]',
+        title: { ja: 'ファイルへ移動' },
+        description: {
+            ja: 'ファインダーを開いてファイル名で検索し、素早く移動できます。キーボードショートカット「t」でも起動可能。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-add-file',
+        selector: 'details summary[aria-label*="Add file" i], [data-target="get-repo.addFileSummary"]',
+        title: { ja: 'ファイル追加' },
+        description: {
+            ja: '新しいファイルをブラウザ上で作成するか、ローカルからアップロードできます。コミットメッセージも指定可能。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-code-button',
+        selector: 'button[id*="code-dropdown"], summary[data-target="get-repo.showCloneMenuSummary"], get-repo summary.btn',
+        title: { ja: 'Code ボタン' },
+        description: {
+            ja: 'リポジトリのクローンURL（HTTPS/SSH/CLI）を取得。GitHub Desktop/Codespacesで開く、ZIPダウンロードも可能です。',
+        },
+    },
+
+    // ファイル操作ボタン
+    {
+        type: 'hover',
+        id: 'hover-nav-raw-button',
+        selector: 'a[data-view-component="true"][href*="/raw/"], a[href*="/raw/"]',
+        title: { ja: 'Raw' },
+        description: {
+            ja: 'ファイルの生データを表示。フォーマットなしのテキストとして取得でき、直接ダウンロードも可能です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-blame-button',
+        selector: 'a[data-view-component="true"][href*="/blame/"], a[href*="/blame/"]',
+        title: { ja: 'Blame' },
+        description: {
+            ja: '各行を最後に変更したコミットと作者を表示。誰がいつ何のために変更したかを追跡できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-history-button',
+        selector: 'a[href*="/commits/"], a[aria-label*="History" i]',
+        title: { ja: '履歴' },
+        description: {
+            ja: 'このファイルの変更履歴（コミット一覧）を表示。過去のバージョンを確認・比較できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-edit-button',
+        selector: 'a[aria-label="Edit this file"], button[aria-label*="Edit"]',
+        title: { ja: 'ファイル編集' },
+        description: {
+            ja: 'ブラウザ上でファイルを直接編集。変更後、新しいコミットまたはPRとして保存できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-delete-button',
+        selector: 'button[aria-label="Delete this file"], a[aria-label*="Delete"]',
+        title: { ja: 'ファイル削除' },
+        description: {
+            ja: 'このファイルを削除するコミットを作成。削除理由をコミットメッセージに記載できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-copy-path',
+        selector: 'clipboard-copy[aria-label*="Copy path"], button[aria-label*="Copy path"]',
+        title: { ja: 'パスをコピー' },
+        description: {
+            ja: 'ファイルの相対パスをクリップボードにコピー。README等でリンクを作成する際に便利です。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-copy-permalink',
+        selector: 'clipboard-copy[aria-label*="Copy permalink"], button[aria-label*="permalink"]',
+        title: { ja: 'パーマリンクをコピー' },
+        description: {
+            ja: '特定のコミット時点でのファイルへの永続リンクをコピー。将来ファイルが変わっても同じ内容を参照できます。',
+        },
+    },
+
+    // ブランチ・タグセレクタ
+    {
+        type: 'hover',
+        id: 'hover-nav-branch-selector',
+        selector: 'summary[data-hotkey="w"], ref-selector, button[id*="branch-selector"]',
+        title: { ja: 'ブランチ/タグ切替' },
+        description: {
+            ja: '表示するブランチやタグを切り替えます。新しいブランチの作成もここから可能。ショートカット「w」。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-compare-pr',
+        selector: 'a[href*="/compare/"]',
+        title: { ja: 'Compare & Pull request' },
+        description: {
+            ja: 'ブランチ間の差分を比較し、プルリクエストを作成します。最近プッシュしたブランチがある場合に表示されます。',
+        },
+    },
+
+    // パンくずリスト
+    {
+        type: 'hover',
+        id: 'hover-nav-breadcrumb',
+        selector: 'nav[aria-label="Breadcrumb"] a, .js-path-segment',
+        title: { ja: 'パンくずリスト' },
+        description: {
+            ja: '現在のファイル/フォルダの階層構造を表示。クリックで上位ディレクトリへ移動できます。',
+        },
+    },
+
+    // フッター・About
+    {
+        type: 'hover',
+        id: 'hover-nav-about-edit',
+        selector: 'button[aria-label="Edit repository metadata"], a[href*="/settings"][aria-label*="Edit" i]',
+        title: { ja: 'リポジトリ情報編集' },
+        description: {
+            ja: 'リポジトリの説明文、ウェブサイトURL、トピックを編集します。検索性向上のためトピック設定を推奨。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-readme',
+        selector: 'article.markdown-body, .readme, #readme',
+        title: { ja: 'README' },
+        description: {
+            ja: 'プロジェクトの概要、使い方、インストール方法などを説明するドキュメント。最初に読むべきファイルです。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-license',
+        selector: 'a[href*="/blob/"][href*="LICENSE"], a.Link--muted[href*="license"]',
+        title: { ja: 'ライセンス' },
+        description: {
+            ja: 'このリポジトリのコードのライセンス条件。商用利用、改変、再配布の可否などが定義されています。',
+        },
+    },
+
+    // Explore・ダッシュボード
+    {
+        type: 'hover',
+        id: 'hover-nav-explore',
+        selector: 'a[href="/explore"]',
+        title: { ja: 'Explore' },
+        description: {
+            ja: 'トレンドリポジトリ、トピック、コレクション、開発者を発見。新しいプロジェクトやツールを見つけられます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-marketplace',
+        selector: 'a[href="/marketplace"]',
+        title: { ja: 'Marketplace' },
+        description: {
+            ja: 'GitHub Actions、GitHub Appsなどの拡張機能を検索・インストール。CI/CD、コードレビューツールなど多数。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-trending',
+        selector: 'a[href="/trending"]',
+        title: { ja: 'トレンド' },
+        description: {
+            ja: '今日/今週/今月で人気上昇中のリポジトリ一覧。言語やトピックでフィルタ可能です。',
+        },
+    },
+
+    // フィルタ・ソート
+    {
+        type: 'hover',
+        id: 'hover-nav-filter-menu',
+        selector: 'details-menu[src*="filter"], .subnav-search-context, button[aria-label*="Filter" i]',
+        title: { ja: 'フィルター' },
+        description: {
+            ja: '一覧を条件で絞り込み。著者、ラベル、マイルストーン、レビュー状況などで検索結果を限定できます。',
+        },
+    },
+    {
+        type: 'hover',
+        id: 'hover-nav-sort-menu',
+        selector: 'details-menu[src*="sort"], select[name="sort"], button[aria-label*="Sort" i]',
+        title: { ja: '並び替え' },
+        description: {
+            ja: '一覧の並び順を変更。作成日、更新日、コメント数、リアクション数などで並べ替えられます。',
+        },
+    },
+
+    // ページネーション
+    {
+        type: 'hover',
+        id: 'hover-nav-pagination',
+        selector: '.pagination a, [aria-label="Pagination"]',
+        title: { ja: 'ページネーション' },
+        description: {
+            ja: '結果が複数ページにわたる場合のページ切り替え。「Previous」「Next」または番号をクリック。',
         },
     },
 ];
