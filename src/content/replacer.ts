@@ -152,8 +152,8 @@ export function replaceTextNode(node: Text): void {
     node.textContent = text;
     // 重複チェック：既にこのノードが追跡されているか確認
     if (!trackedNodes.has(node)) {
-      trackedNodes.add(node);
       replacedNodes.add(new WeakRef(node));
+      trackedNodes.add(node);
     }
   }
 }
