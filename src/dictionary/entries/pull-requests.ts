@@ -304,6 +304,15 @@ export const pullRequestEntries: DictionaryEntry[] = [
     // === Hover Entries ===
     {
         type: 'hover',
+        id: 'hover-create-pr-button',
+        selector: 'button.btn-primary.js-details-target, a.btn-primary[href*="/compare"], a.btn-primary[href*="/pull/new"], form[action*="/pull/create"] .btn-primary',
+        title: { ja: 'Create pull request' },
+        description: {
+            ja: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
+        },
+    },
+    {
+        type: 'hover',
         id: 'hover-pr-nav',
         selector: 'nav a[href*="/pulls"], a.js-selected-navigation-item[data-tab-item="i1pull-requests-tab"], a[data-tab-item*="pull"], [aria-label*="Pull Request"]',
         title: { ja: 'プルリクエスト' },

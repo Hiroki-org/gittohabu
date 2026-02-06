@@ -8,57 +8,6 @@ interface GittohabulMessage {
   type: 'hotReload' | 'getStatus';
 }
 
-/** ツールチップ表示用の型定義 */
-interface TooltipOptions {
-  anchor: Element;
-  title: string;
-  text: string;
-}
-
-let tooltipElement: HTMLDivElement | null = null;
-
-function showTooltip({ anchor, title, text }: TooltipOptions): void {
-  hideTooltip();
-
-  tooltipElement = document.createElement('div');
-  tooltipElement.style.cssText = `
-    position: absolute;
-    z-index: 9999;
-    background: #24292f;
-    color: #fff;
-    border-radius: 6px;
-    padding: 8px 12px;
-    font-size: 12px;
-    max-width: 300px;
-    box-shadow: 0 8px 24px rgba(140, 149, 159, 0.2);
-    pointer-events: none;
-  `;
-
-  const titleEl = document.createElement('div');
-  titleEl.style.fontWeight = 'bold';
-  titleEl.style.marginBottom = '4px';
-  titleEl.textContent = title;
-
-  const textEl = document.createElement('div');
-  textEl.textContent = text;
-
-  tooltipElement.appendChild(titleEl);
-  tooltipElement.appendChild(textEl);
-  document.body.appendChild(tooltipElement);
-
-  const rect = anchor.getBoundingClientRect();
-  const tooltipRect = tooltipElement.getBoundingClientRect();
-  tooltipElement.style.left = `${rect.left + window.scrollX + (rect.width - tooltipRect.width) / 2}px`;
-  tooltipElement.style.top = `${rect.bottom + window.scrollY + 8}px`;
-}
-
-function hideTooltip(): void {
-  if (tooltipElement && tooltipElement.parentNode) {
-    tooltipElement.parentNode.removeChild(tooltipElement);
-    tooltipElement = null;
-  }
-}
-
 async function init(): Promise<void> {
   console.log('[gittohabu] Initializing...');
 
@@ -78,49 +27,6 @@ async function init(): Promise<void> {
     startObserver();
   }
 
-  // TODO: https://github.com/Hiroki-org/gittohabu/issues/5 ツールチップUI統合（hover設定の再利用）
-  document.addEventListener('mouseover', (e: MouseEvent) => {
-    if (!(e.ctrlKey || e.metaKey)) {
-      return;
-    }
-    const target = e.target;
-    // Fix: Use Element instead of HTMLElement to support SVG children (icons)
-    if (!(target instanceof Element)) {
-      return;
-    }
-    const anchor = target.closest('.btn-primary');
-    if (!(anchor instanceof Element)) {
-      return;
-    }
-    // Simulate mouseenter: verify we are not coming from a child
-    if (e.relatedTarget instanceof Node && anchor.contains(e.relatedTarget)) {
-      return;
-    }
-
-    showTooltip({
-      anchor,
-      title: 'Create pull request',
-      text: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
-    });
-  });
-
-  document.addEventListener('mouseout', (e: MouseEvent) => {
-    const target = e.target;
-    // Fix: Use Element instead of HTMLElement to support SVG children (icons)
-    if (!(target instanceof Element)) {
-      return;
-    }
-    const anchor = target.closest('.btn-primary');
-    if (!(anchor instanceof Element)) {
-      return;
-    }
-    // Simulate mouseleave: verify we are not going to a child
-    if (e.relatedTarget instanceof Node && anchor.contains(e.relatedTarget)) {
-      return;
-    }
-
-    hideTooltip();
-  });
 
   console.log('[gittohabu] Initialized with', replaceEntries.length, 'replace entries');
 }

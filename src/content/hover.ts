@@ -24,7 +24,7 @@ function handleMouseOver(e: MouseEvent) {
   if (!(e.ctrlKey || e.metaKey)) return;
 
   const target = e.target;
-  if (!(target instanceof HTMLElement)) return;
+  if (!(target instanceof Element)) return;
 
   // Optimization: if we are already in currentAnchor, do nothing
   if (currentAnchor && currentAnchor.contains(target)) {
