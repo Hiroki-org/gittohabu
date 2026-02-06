@@ -84,7 +84,6 @@ async function init(): Promise<void> {
       return;
     }
     const target = e.target;
-    // Fix: Use Element instead of HTMLElement to support SVG children (icons)
     if (!(target instanceof Element)) {
       return;
     }
@@ -106,7 +105,6 @@ async function init(): Promise<void> {
 
   document.addEventListener('mouseout', (e: MouseEvent) => {
     const target = e.target;
-    // Fix: Use Element instead of HTMLElement to support SVG children (icons)
     if (!(target instanceof Element)) {
       return;
     }
