@@ -305,7 +305,7 @@ export const pullRequestEntries: DictionaryEntry[] = [
     {
         type: 'hover',
         id: 'hover-create-pr-button',
-        selector: 'button.btn-primary.js-details-target, a.btn-primary[href*="/compare"], a.btn-primary[href*="/pull/new"], form[action*="/pull/create"] .btn-primary',
+        selector: 'a.btn-primary[href*="/compare"], a.btn-primary[href*="/pull/new"], form[action*="/pull/create"] .btn-primary',
         title: { ja: 'Create pull request' },
         description: {
             ja: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
