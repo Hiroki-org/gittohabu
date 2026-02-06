@@ -3,20 +3,25 @@ import type { ReplaceEntry } from '../dictionary/schema';
 /** 現在の言語設定 */
 let currentLang = 'ja';
 
-type CompiledReplaceEntry = {
-  entry: ReplaceEntry;
+type ReplacementGroup = {
+  /** The merged regex pattern for all entries in this group */
+  pattern: RegExp;
+  /** Map from matched string (normalized if case-insensitive) to the Entry */
+  replacements: Map<string, ReplaceEntry>;
+  /** URL filtering pattern (if any) */
   urlPattern?: RegExp;
-  fromPattern: RegExp;
+  /** Whether this group is case sensitive (helper for map lookup) */
+  caseSensitive: boolean;
 };
 
 /** 置換対象のエントリ一覧 */
-let compiledEntries: CompiledReplaceEntry[] = [];
+let compiledGroups: ReplacementGroup[] = [];
 
 /**
  * 有効なエントリのキャッシュを管理するクラス
  */
 class ReplacementCache {
-  private activeEntries: CompiledReplaceEntry[] = [];
+  private activeGroups: ReplacementGroup[] = [];
   private cachedUrl: string | null = null;
 
   /**
@@ -24,23 +29,23 @@ class ReplacementCache {
    */
   invalidate(): void {
     this.cachedUrl = null;
-    this.activeEntries = [];
+    this.activeGroups = [];
   }
 
   /**
    * 現在のURLに適用可能なエントリを取得
    */
-  get(allEntries: CompiledReplaceEntry[]): CompiledReplaceEntry[] {
+  get(allGroups: ReplacementGroup[]): ReplacementGroup[] {
     const currentUrl = window.location.href;
     if (this.cachedUrl === currentUrl) {
-      return this.activeEntries;
+      return this.activeGroups;
     }
 
-    this.activeEntries = allEntries.filter(
-      (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+    this.activeGroups = allGroups.filter(
+      (g) => !g.urlPattern || g.urlPattern.test(currentUrl),
     );
     this.cachedUrl = currentUrl;
-    return this.activeEntries;
+    return this.activeGroups;
   }
 }
 
@@ -56,42 +61,95 @@ const replacedNodes = new Set<WeakRef<Text>>();
 let isEnabled = true;
 
 /**
+ * 正規表現用のエスケープ
+ */
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
  * 置換エントリを設定
  */
 export function setReplaceEntries(entries: ReplaceEntry[]): void {
-  // エントリ登録時に正規表現をコンパイルして再利用する
-  const nextEntries: CompiledReplaceEntry[] = [];
+  // Group entries by urlPattern + caseSensitive
+  const groups = new Map<string, {
+    entries: ReplaceEntry[];
+    urlPattern?: string;
+    caseSensitive: boolean;
+  }>();
+
   for (const entry of entries) {
+    const key = `${entry.urlPattern || ''}::${entry.caseSensitive !== false}`;
+    if (!groups.has(key)) {
+      groups.set(key, {
+        entries: [],
+        urlPattern: entry.urlPattern,
+        caseSensitive: entry.caseSensitive !== false,
+      });
+    }
+    groups.get(key)!.entries.push(entry);
+  }
+
+  const nextGroups: ReplacementGroup[] = [];
+
+  for (const groupData of groups.values()) {
     try {
-      const flags = entry.caseSensitive === false ? 'gi' : 'g';
       let urlPattern: RegExp | undefined;
-      if (entry.urlPattern) {
+      if (groupData.urlPattern) {
         try {
-          urlPattern = new RegExp(entry.urlPattern);
+          urlPattern = new RegExp(groupData.urlPattern);
         } catch (error) {
           console.warn(
             '[gittohabu] urlPatternの正規表現が無効です:',
-            entry.urlPattern,
+            groupData.urlPattern,
             error,
           );
           continue;
         }
       }
-      const fromPattern = new RegExp(escapeRegExp(entry.from), flags);
-      nextEntries.push({
-        entry,
+
+      const flags = groupData.caseSensitive ? 'g' : 'gi';
+      const replacements = new Map<string, ReplaceEntry>();
+      const patterns: string[] = [];
+
+      for (const entry of groupData.entries) {
+        try {
+          // Use original order
+          const escaped = escapeRegExp(entry.from);
+          patterns.push(escaped);
+
+          const key = groupData.caseSensitive ? entry.from : entry.from.toLowerCase();
+          // To preserve loop behavior for exact duplicates, we use the FIRST entry.
+          if (!replacements.has(key)) {
+            replacements.set(key, entry);
+          }
+        } catch (error) {
+          console.warn(
+             '[gittohabu] エントリの処理に失敗しました:',
+             entry,
+             error
+          );
+        }
+      }
+
+      if (patterns.length === 0) continue;
+
+      const masterPatternSource = `(${patterns.join('|')})`;
+      const masterPattern = new RegExp(masterPatternSource, flags);
+
+      nextGroups.push({
+        pattern: masterPattern,
+        replacements,
         urlPattern,
-        fromPattern,
+        caseSensitive: groupData.caseSensitive,
       });
+
     } catch (error) {
-      console.warn(
-        '[gittohabu] fromの正規表現が無効です:',
-        entry.from,
-        error,
-      );
+      console.error('[gittohabu] グループのコンパイルに失敗しました', error);
     }
   }
-  compiledEntries = nextEntries;
+
+  compiledGroups = nextGroups;
   // キャッシュをクリア
   entryCache.invalidate();
 }
@@ -131,14 +189,23 @@ export function replaceTextNode(node: Text): void {
   let text = originalText;
   let modified = false;
 
-  const entries = entryCache.get(compiledEntries);
+  const activeGroups = entryCache.get(compiledGroups);
 
-  for (const compiled of entries) {
-    const replacement = compiled.entry.to[currentLang];
-    if (!replacement) continue;
+  for (const group of activeGroups) {
+    group.pattern.lastIndex = 0;
 
-    compiled.fromPattern.lastIndex = 0;
-    const replaced = text.replace(compiled.fromPattern, () => replacement);
+    const replaced = text.replace(group.pattern, (match) => {
+      const key = group.caseSensitive ? match : match.toLowerCase();
+      const entry = group.replacements.get(key);
+      // In theory, if regex matched, entry must exist.
+      // But if multiple entries map to same regex (e.g. "foo" and "Foo" in case-insensitive),
+      // key normalization handles it.
+      if (!entry) return match;
+
+      const replacement = entry.to[currentLang];
+      return replacement !== undefined ? replacement : match;
+    });
+
     if (replaced !== text) {
       text = replaced;
       modified = true;
@@ -153,13 +220,6 @@ export function replaceTextNode(node: Text): void {
       replacedNodes.add(new WeakRef(node));
     }
   }
-}
-
-/**
- * 正規表現用のエスケープ
- */
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
