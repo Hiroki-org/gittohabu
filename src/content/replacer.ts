@@ -52,6 +52,9 @@ const originalTextMap = new WeakMap<Text, string>();
 /** 置換済みのテキストノードを追跡 */
 const replacedNodes = new Set<WeakRef<Text>>();
 
+/** 追跡済みノードを高速に参照するためのWeakSet */
+let trackedNodes = new WeakSet<Text>();
+
 /** 置換が有効かどうか */
 let isEnabled = true;
 
@@ -148,8 +151,8 @@ export function replaceTextNode(node: Text): void {
   if (modified && text !== node.textContent) {
     node.textContent = text;
     // 重複チェック：既にこのノードが追跡されているか確認
-    const isAlreadyTracked = Array.from(replacedNodes).some((weakRef) => weakRef.deref() === node);
-    if (!isAlreadyTracked) {
+    if (!trackedNodes.has(node)) {
+      trackedNodes.add(node);
       replacedNodes.add(new WeakRef(node));
     }
   }
@@ -224,6 +227,7 @@ export function restoreAll(): void {
     }
   }
   replacedNodes.clear();
+  trackedNodes = new WeakSet<Text>();
   console.log('[gittohabu] テキストを元に戻しました');
 }
 
