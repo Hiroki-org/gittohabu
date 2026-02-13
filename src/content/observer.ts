@@ -33,12 +33,14 @@ function flushPendingNodes(): void {
     return true;
   });
 
+  const currentUrl = window.location.href; // Retrieve URL once for the batch
+
   for (const node of filteredNodes) {
     // 処理前に再度接続状態を確認
     if (!node.isConnected) continue;
 
     if (node.nodeType === Node.ELEMENT_NODE) {
-      replaceTextInElement(node as Element);
+      replaceTextInElement(node as Element, currentUrl); // Pass currentUrl
     } else if (node.nodeType === Node.TEXT_NODE) {
       const textNode = node as Text;
       const parent = textNode.parentElement;
@@ -47,7 +49,7 @@ function flushPendingNodes(): void {
         !parent.isContentEditable &&
         !parent.closest('script,style,textarea,input')
       ) {
-        replaceTextNode(textNode);
+        replaceTextNode(textNode, currentUrl); // Pass currentUrl
       }
     }
   }

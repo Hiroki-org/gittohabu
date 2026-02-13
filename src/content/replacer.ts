@@ -30,16 +30,16 @@ class ReplacementCache {
   /**
    * 現在のURLに適用可能なエントリを取得
    */
-  get(allEntries: CompiledReplaceEntry[]): CompiledReplaceEntry[] {
-    const currentUrl = window.location.href;
-    if (this.cachedUrl === currentUrl) {
+  get(allEntries: CompiledReplaceEntry[], currentUrl?: string): CompiledReplaceEntry[] {
+    const url = currentUrl ?? window.location.href;
+    if (this.cachedUrl === url) {
       return this.activeEntries;
     }
 
     this.activeEntries = allEntries.filter(
-      (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+      (c) => !c.urlPattern || c.urlPattern.test(url),
     );
-    this.cachedUrl = currentUrl;
+    this.cachedUrl = url;
     return this.activeEntries;
   }
 }
@@ -117,7 +117,7 @@ export function setLanguage(lang: string): void {
 /**
  * 単一のテキストノードに対して置換を実行
  */
-export function replaceTextNode(node: Text): void {
+export function replaceTextNode(node: Text, currentUrl?: string): void {
   if (!isEnabled) return;
 
   // 元のテキストを保持（初回のみ）
@@ -131,7 +131,7 @@ export function replaceTextNode(node: Text): void {
   let text = originalText;
   let modified = false;
 
-  const entries = entryCache.get(compiledEntries);
+  const entries = entryCache.get(compiledEntries, currentUrl);
 
   for (const compiled of entries) {
     const replacement = compiled.entry.to[currentLang];
@@ -165,8 +165,10 @@ function escapeRegExp(str: string): string {
 /**
  * 指定した要素とその子孫のテキストノードを全て置換
  */
-export function replaceTextInElement(element: Element | Document): void {
+export function replaceTextInElement(element: Element | Document, currentUrl?: string): void {
   if (!isEnabled) return;
+
+  const url = currentUrl ?? window.location.href;
 
   const walker = document.createTreeWalker(
     element,
@@ -193,7 +195,7 @@ export function replaceTextInElement(element: Element | Document): void {
 
   let currentNode: Node | null;
   while ((currentNode = walker.nextNode())) {
-    replaceTextNode(currentNode as Text);
+    replaceTextNode(currentNode as Text, url);
   }
 }
 
