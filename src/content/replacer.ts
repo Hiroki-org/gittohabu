@@ -3,44 +3,146 @@ import type { ReplaceEntry } from '../dictionary/schema';
 /** 現在の言語設定 */
 let currentLang = 'ja';
 
-type CompiledReplaceEntry = {
+/** 正規表現用のエスケープ */
+function escapeRegExp(str: string): string {
+  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+/**
+ * 有効な置換エントリ (バリデーション済み)
+ */
+type ValidReplaceEntry = {
   entry: ReplaceEntry;
   urlPattern?: RegExp;
-  fromPattern: RegExp;
 };
 
-/** 置換対象のエントリ一覧 */
-let compiledEntries: CompiledReplaceEntry[] = [];
+/**
+ * コンパイル済みの置換グループ
+ * 同じ正規表現フラグを持つエントリをまとめて1つの正規表現にする
+ */
+type ReplaceGroup = {
+  /** 結合された正規表現 (例: /foo|bar|baz/g) */
+  regex: RegExp;
+  /**
+   * 置換マップ
+   * Key: マッチした文字列 (caseSensitive=falseの場合は小文字化)
+   * Value: 置換後の文字列
+   */
+  replacements: Map<string, string>;
+  /** 大文字小文字を区別するか */
+  caseSensitive: boolean;
+};
+
+/** バリデーション済みのエントリ一覧 */
+let validEntries: ValidReplaceEntry[] = [];
 
 /**
  * 有効なエントリのキャッシュを管理するクラス
  */
 class ReplacementCache {
-  private activeEntries: CompiledReplaceEntry[] = [];
+  private activeGroups: ReplaceGroup[] = [];
   private cachedUrl: string | null = null;
+  // 言語設定が変更された場合もキャッシュを無効化する必要があるため、言語も追跡する
+  private cachedLang: string | null = null;
 
   /**
    * キャッシュを無効化
    */
   invalidate(): void {
     this.cachedUrl = null;
-    this.activeEntries = [];
+    this.cachedLang = null;
+    this.activeGroups = [];
   }
 
   /**
-   * 現在のURLに適用可能なエントリを取得
+   * 現在のURLと言語設定に適用可能なエントリグループを取得
    */
-  get(allEntries: CompiledReplaceEntry[]): CompiledReplaceEntry[] {
+  get(allEntries: ValidReplaceEntry[]): ReplaceGroup[] {
     const currentUrl = window.location.href;
-    if (this.cachedUrl === currentUrl) {
-      return this.activeEntries;
+
+    // URLと言語が変わっていなければキャッシュを返す
+    if (this.cachedUrl === currentUrl && this.cachedLang === currentLang) {
+      return this.activeGroups;
     }
 
-    this.activeEntries = allEntries.filter(
+    // 1. 現在のURLにマッチするエントリをフィルタリング
+    const activeEntries = allEntries.filter(
       (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
     );
+
+    // 2. 部分一致の問題を防ぐため、長い文字列順にソート (例: "Create repository" vs "Repository")
+    // 同じ長さの場合は元の順序を維持（安定ソートのためにインデックスを利用する手もあるが、
+    // ここでは単純に長さでソートするだけでも効果大。JSのsortは最近のブラウザでは安定）
+    activeEntries.sort((a, b) => b.entry.from.length - a.entry.from.length);
+
+    // 3. caseSensitive ごとにグループ化
+    const sensitiveEntries: ValidReplaceEntry[] = [];
+    const insensitiveEntries: ValidReplaceEntry[] = [];
+
+    for (const item of activeEntries) {
+      // entry.caseSensitive が undefined の場合はデフォルト true (schema参照)
+      // しかし実装では false の場合のみ 'gi' にしていたので、
+      // ここでも false の場合のみ Insensitive 扱いにする
+      if (item.entry.caseSensitive === false) {
+        insensitiveEntries.push(item);
+      } else {
+        sensitiveEntries.push(item);
+      }
+    }
+
+    // 4. グループごとに正規表現とマップを作成
+    const nextGroups: ReplaceGroup[] = [];
+
+    // 特定（CaseSensitive）を先に適用した方が良い場合が多いが、
+    // 実際には各グループは排他的に処理される（マッチした部分は消費される）
+    // InsensitiveグループにSensitiveなキーワードが含まれている場合、
+    // Insensitiveが先に走ると、SensitiveなマッチがInsensitiveとして処理される可能性がある。
+    // そのため、Sensitiveを先に処理する。
+    if (sensitiveEntries.length > 0) {
+      nextGroups.push(this.compileGroup(sensitiveEntries, true));
+    }
+    if (insensitiveEntries.length > 0) {
+      nextGroups.push(this.compileGroup(insensitiveEntries, false));
+    }
+
+    this.activeGroups = nextGroups;
     this.cachedUrl = currentUrl;
-    return this.activeEntries;
+    this.cachedLang = currentLang;
+
+    return this.activeGroups;
+  }
+
+  /**
+   * エントリリストから正規表現グループを作成
+   */
+  private compileGroup(entries: ValidReplaceEntry[], caseSensitive: boolean): ReplaceGroup {
+    const replacements = new Map<string, string>();
+    const patterns: string[] = [];
+
+    for (const item of entries) {
+      const from = item.entry.from;
+      // 登録順（＝優先順）にマップに登録。既にキーが存在する場合は登録しない（＝先勝ち）
+      // caseSensitive=false の場合は小文字化してキーにする
+      const key = caseSensitive ? from : from.toLowerCase();
+
+      if (!replacements.has(key)) {
+        const to = item.entry.to[currentLang];
+        if (to) {
+          replacements.set(key, to);
+          patterns.push(escapeRegExp(from));
+        }
+      }
+    }
+
+    // パターンを | で結合
+    const source = patterns.join('|');
+    const flags = caseSensitive ? 'g' : 'gi';
+
+    return {
+      regex: new RegExp(source, flags),
+      replacements,
+      caseSensitive,
+    };
   }
 }
 
@@ -59,39 +161,34 @@ let isEnabled = true;
  * 置換エントリを設定
  */
 export function setReplaceEntries(entries: ReplaceEntry[]): void {
-  // エントリ登録時に正規表現をコンパイルして再利用する
-  const nextEntries: CompiledReplaceEntry[] = [];
+  // エントリの事前検証とURLパターンのコンパイルのみ行う
+  const nextEntries: ValidReplaceEntry[] = [];
+
   for (const entry of entries) {
-    try {
-      const flags = entry.caseSensitive === false ? 'gi' : 'g';
-      let urlPattern: RegExp | undefined;
-      if (entry.urlPattern) {
-        try {
-          urlPattern = new RegExp(entry.urlPattern);
-        } catch (error) {
-          console.warn(
-            '[gittohabu] urlPatternの正規表現が無効です:',
-            entry.urlPattern,
-            error,
-          );
-          continue;
-        }
+    // from がない、あるいは空文字の場合はスキップ
+    if (!entry.from) continue;
+
+    let urlPattern: RegExp | undefined;
+    if (entry.urlPattern) {
+      try {
+        urlPattern = new RegExp(entry.urlPattern);
+      } catch (error) {
+        console.warn(
+          '[gittohabu] urlPatternの正規表現が無効です:',
+          entry.urlPattern,
+          error,
+        );
+        continue;
       }
-      const fromPattern = new RegExp(escapeRegExp(entry.from), flags);
-      nextEntries.push({
-        entry,
-        urlPattern,
-        fromPattern,
-      });
-    } catch (error) {
-      console.warn(
-        '[gittohabu] fromの正規表現が無効です:',
-        entry.from,
-        error,
-      );
     }
+
+    nextEntries.push({
+      entry,
+      urlPattern,
+    });
   }
-  compiledEntries = nextEntries;
+
+  validEntries = nextEntries;
   // キャッシュをクリア
   entryCache.invalidate();
 }
@@ -111,7 +208,11 @@ export function isReplaceEnabled(): boolean {
  * 現在の言語を設定
  */
 export function setLanguage(lang: string): void {
-  currentLang = lang;
+  if (currentLang !== lang) {
+    currentLang = lang;
+    // 言語が変わったらキャッシュを無効化して再コンパイルが必要
+    entryCache.invalidate();
+  }
 }
 
 /**
@@ -131,14 +232,20 @@ export function replaceTextNode(node: Text): void {
   let text = originalText;
   let modified = false;
 
-  const entries = entryCache.get(compiledEntries);
+  // キャッシュされたグループを取得（URLと言語に基づいて生成される）
+  const groups = entryCache.get(validEntries);
 
-  for (const compiled of entries) {
-    const replacement = compiled.entry.to[currentLang];
-    if (!replacement) continue;
+  for (const group of groups) {
+    // 正規表現のlastIndexをリセット
+    group.regex.lastIndex = 0;
 
-    compiled.fromPattern.lastIndex = 0;
-    const replaced = text.replace(compiled.fromPattern, () => replacement);
+    // マッチするか確認（replace内でコールバックを使う）
+    // NOTE: replaceはマッチした部分を置換していくため、非重複かつ最長一致（ソート済みのため）で置換される
+    const replaced = text.replace(group.regex, (match) => {
+      const key = group.caseSensitive ? match : match.toLowerCase();
+      return group.replacements.get(key) ?? match;
+    });
+
     if (replaced !== text) {
       text = replaced;
       modified = true;
@@ -153,13 +260,6 @@ export function replaceTextNode(node: Text): void {
       replacedNodes.add(new WeakRef(node));
     }
   }
-}
-
-/**
- * 正規表現用のエスケープ
- */
-function escapeRegExp(str: string): string {
-  return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
 }
 
 /**
