@@ -632,4 +632,13 @@ export const pullRequestEntries: DictionaryEntry[] = [
             ja: '削除されたブランチを復元します。誤って削除した場合や追加の作業が必要な場合に使用します。',
         },
     },
+    {
+        type: 'hover',
+        id: 'hover-create-pr-button',
+        selector: 'a[href*="/compare"], button.btn-primary',
+        title: { ja: 'プルリクエストを作成' },
+        description: {
+            ja: 'プルリクエストを作成するボタンです．変更をレビュー依頼したい時に使います．',
+        },
+    },
 ];

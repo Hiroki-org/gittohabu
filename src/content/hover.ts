@@ -9,7 +9,7 @@ type CompiledHoverEntry = {
 let compiledEntries: CompiledHoverEntry[] = [];
 let isEnabled = false;
 let currentLang = 'ja';
-let currentAnchor: HTMLElement | null = null;
+let currentAnchor: Element | null = null;
 
 export function setLanguage(lang: string): void {
   currentLang = lang;
@@ -24,7 +24,7 @@ function handleMouseOver(e: MouseEvent) {
   if (!(e.ctrlKey || e.metaKey)) return;
 
   const target = e.target;
-  if (!(target instanceof HTMLElement)) return;
+  if (!(target instanceof Element)) return;
 
   // Optimization: if we are already in currentAnchor, do nothing
   if (currentAnchor && currentAnchor.contains(target)) {
@@ -41,7 +41,7 @@ function handleMouseOver(e: MouseEvent) {
 
     try {
       const anchor = target.closest(compiled.entry.selector);
-      if (anchor instanceof HTMLElement) {
+      if (anchor instanceof Element) {
         currentAnchor = anchor;
         showTooltip({
           anchor,
