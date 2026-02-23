@@ -13,25 +13,42 @@ function flushPendingNodes(): void {
   pendingNodes = new Set<Node>();
 
   const nodes = Array.from(currentPending);
+
+  // 祖先要素のチェック結果をキャッシュするMap
+  const ancestorCache = new Map<Node, boolean>();
+
+  // 祖先要素がpendingに含まれているかをチェックするヘルパー関数（メモ化付き）
+  function hasPendingAncestor(node: Node | null): boolean {
+    if (!node) {
+      return false;
+    }
+    if (ancestorCache.has(node)) {
+      return ancestorCache.get(node)!;
+    }
+
+    let result = false;
+    if (currentPending.has(node)) {
+      result = true;
+    } else if (node === document.body) {
+      // document.body自体がpendingに含まれていない場合（上記チェック済み）、
+      // ここで探索終了。bodyの親(null)へ行く必要はない。
+      result = false;
+    } else {
+      result = hasPendingAncestor(node.parentNode);
+    }
+
+    ancestorCache.set(node, result);
+    return result;
+  }
+
   // 祖先要素がcurrentPendingに含まれている場合は、親の処理でカバーされるため除外する
   const filteredNodes = nodes.filter((node) => {
     // 切断されたノードはスキップ
     if (!node.isConnected) {
       return false;
     }
-    let parent = node.parentNode;
-    // document.bodyで早期終了して不要な走査を削減
-    while (parent && parent !== document.body) {
-      if (currentPending.has(parent)) {
-        return false;
-      }
-      parent = parent.parentNode;
-    }
-    // document.body自体もチェック
-    if (parent === document.body && currentPending.has(document.body)) {
-      return false;
-    }
-    return true;
+    // 親から順に祖先をチェック
+    return !hasPendingAncestor(node.parentNode);
   });
 
   for (const node of filteredNodes) {
