@@ -10,6 +10,7 @@ interface GittohabulMessage {
 
 
 
+
 async function init(): Promise<void> {
   console.log('[gittohabu] Initializing...');
 
