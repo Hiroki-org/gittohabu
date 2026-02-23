@@ -7,6 +7,11 @@ type CompiledHoverEntry = {
 };
 
 let compiledEntries: CompiledHoverEntry[] = [];
+// Cache for optimization
+let activeEntries: CompiledHoverEntry[] = [];
+let activeCombinedSelector: string = '';
+let lastUrl: string = '';
+
 let isEnabled = false;
 let currentLang = 'ja';
 let currentAnchor: Element | null = null;
@@ -17,6 +22,33 @@ export function setLanguage(lang: string): void {
 
 function getLocalizedValue(text: { [key: string]: string }): string {
   return text[currentLang] || text['en'] || Object.values(text)[0] || '';
+}
+
+function isValidSelector(selector: string): boolean {
+  try {
+    document.createDocumentFragment().querySelector(selector);
+    return true;
+  } catch {
+    return false;
+  }
+}
+
+function updateActiveEntries() {
+  const currentUrl = window.location.href;
+  if (currentUrl === lastUrl) return;
+
+  activeEntries = compiledEntries.filter((compiled) => {
+    if (compiled.urlPattern) {
+      return compiled.urlPattern.test(currentUrl);
+    }
+    return true;
+  });
+
+  activeCombinedSelector = activeEntries
+    .map((c) => c.entry.selector)
+    .join(',');
+
+  lastUrl = currentUrl;
 }
 
 function handleMouseOver(e: MouseEvent) {
@@ -31,28 +63,22 @@ function handleMouseOver(e: MouseEvent) {
     return;
   }
 
-  for (const compiled of compiledEntries) {
-    // URL pattern check
-    if (compiled.urlPattern) {
-      if (!compiled.urlPattern.test(window.location.href)) {
-        continue;
-      }
-    }
+  updateActiveEntries();
 
-    try {
-      const anchor = target.closest(compiled.entry.selector);
-      if (anchor instanceof Element) {
-        currentAnchor = anchor;
-        showTooltip({
-          anchor,
-          title: getLocalizedValue(compiled.entry.title),
-          text: getLocalizedValue(compiled.entry.description),
-        });
-        return;
-      }
-    } catch {
-      // Ignore invalid selectors
-      continue;
+  if (!activeCombinedSelector) return;
+
+  const match = target.closest(activeCombinedSelector);
+  if (!match || !(match instanceof Element)) return;
+
+  for (const compiled of activeEntries) {
+    if (match.matches(compiled.entry.selector)) {
+      currentAnchor = match;
+      showTooltip({
+        anchor: match,
+        title: getLocalizedValue(compiled.entry.title),
+        text: getLocalizedValue(compiled.entry.description),
+      });
+      return;
     }
   }
 }
@@ -72,21 +98,34 @@ function handleMouseOut(e: MouseEvent) {
 }
 
 export function setHoverEntries(entries: HoverEntry[]): void {
-  compiledEntries = entries.map((entry) => {
-    let urlPattern: RegExp | undefined;
-    if (entry.urlPattern) {
-      try {
-        urlPattern = new RegExp(entry.urlPattern);
-      } catch (error) {
-        console.warn(
-          '[gittohabu] urlPattern definition is invalid:',
-          entry.urlPattern,
-          error,
-        );
+  compiledEntries = entries
+    .filter((entry) => {
+      if (!isValidSelector(entry.selector)) {
+        console.warn('[gittohabu] Invalid selector:', entry.selector);
+        return false;
       }
-    }
-    return { entry, urlPattern };
-  });
+      return true;
+    })
+    .map((entry) => {
+      let urlPattern: RegExp | undefined;
+      if (entry.urlPattern) {
+        try {
+          urlPattern = new RegExp(entry.urlPattern);
+        } catch (error) {
+          console.warn(
+            '[gittohabu] urlPattern definition is invalid:',
+            entry.urlPattern,
+            error,
+          );
+        }
+      }
+      return { entry, urlPattern };
+    });
+
+  // Reset cache
+  lastUrl = '';
+  activeCombinedSelector = '';
+  activeEntries = [];
 }
 
 export function setHoverEnabled(enabled: boolean): void {
