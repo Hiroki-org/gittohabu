@@ -57,22 +57,20 @@ class ReplacementCache {
   /**
    * 現在のURLと言語設定に適用可能なエントリグループを取得
    */
-  get(allEntries: ValidReplaceEntry[]): ReplaceGroup[] {
-    const currentUrl = window.location.href;
+  get(allEntries: ValidReplaceEntry[], currentUrl?: string): ReplaceGroup[] {
+    const url = currentUrl ?? window.location.href;
 
     // URLと言語が変わっていなければキャッシュを返す
-    if (this.cachedUrl === currentUrl && this.cachedLang === currentLang) {
+    if (this.cachedUrl === url && this.cachedLang === currentLang) {
       return this.activeGroups;
     }
 
     // 1. 現在のURLにマッチするエントリをフィルタリング
     const activeEntries = allEntries.filter(
-      (c) => !c.urlPattern || c.urlPattern.test(currentUrl),
+      (c) => !c.urlPattern || c.urlPattern.test(url),
     );
 
-    // 2. 部分一致の問題を防ぐため、長い文字列順にソート (例: "Create repository" vs "Repository")
-    // 同じ長さの場合は元の順序を維持（安定ソートのためにインデックスを利用する手もあるが、
-    // ここでは単純に長さでソートするだけでも効果大。JSのsortは最近のブラウザでは安定）
+    // 2. 部分一致の問題を防ぐため、長い文字列順にソート
     activeEntries.sort((a, b) => b.entry.from.length - a.entry.from.length);
 
     // 3. caseSensitive ごとにグループ化
@@ -80,9 +78,6 @@ class ReplacementCache {
     const insensitiveEntries: ValidReplaceEntry[] = [];
 
     for (const item of activeEntries) {
-      // entry.caseSensitive が undefined の場合はデフォルト true (schema参照)
-      // しかし実装では false の場合のみ 'gi' にしていたので、
-      // ここでも false の場合のみ Insensitive 扱いにする
       if (item.entry.caseSensitive === false) {
         insensitiveEntries.push(item);
       } else {
@@ -93,11 +88,7 @@ class ReplacementCache {
     // 4. グループごとに正規表現とマップを作成
     const nextGroups: ReplaceGroup[] = [];
 
-    // 特定（CaseSensitive）を先に適用した方が良い場合が多いが、
-    // 実際には各グループは排他的に処理される（マッチした部分は消費される）
-    // InsensitiveグループにSensitiveなキーワードが含まれている場合、
-    // Insensitiveが先に走ると、SensitiveなマッチがInsensitiveとして処理される可能性がある。
-    // そのため、Sensitiveを先に処理する。
+    // Sensitiveを先に処理する
     if (sensitiveEntries.length > 0) {
       nextGroups.push(this.compileGroup(sensitiveEntries, true));
     }
@@ -106,7 +97,7 @@ class ReplacementCache {
     }
 
     this.activeGroups = nextGroups;
-    this.cachedUrl = currentUrl;
+    this.cachedUrl = url;
     this.cachedLang = currentLang;
 
     return this.activeGroups;
@@ -121,8 +112,6 @@ class ReplacementCache {
 
     for (const item of entries) {
       const from = item.entry.from;
-      // 登録順（＝優先順）にマップに登録。既にキーが存在する場合は登録しない（＝先勝ち）
-      // caseSensitive=false の場合は小文字化してキーにする
       const key = caseSensitive ? from : from.toLowerCase();
 
       if (!replacements.has(key)) {
@@ -218,7 +207,7 @@ export function setLanguage(lang: string): void {
 /**
  * 単一のテキストノードに対して置換を実行
  */
-export function replaceTextNode(node: Text): void {
+export function replaceTextNode(node: Text, currentUrl?: string): void {
   if (!isEnabled) return;
 
   // 元のテキストを保持（初回のみ）
@@ -233,7 +222,7 @@ export function replaceTextNode(node: Text): void {
   let modified = false;
 
   // キャッシュされたグループを取得（URLと言語に基づいて生成される）
-  const groups = entryCache.get(validEntries);
+  const groups = entryCache.get(validEntries, currentUrl);
 
   for (const group of groups) {
     // 正規表現のlastIndexをリセット
@@ -265,8 +254,9 @@ export function replaceTextNode(node: Text): void {
 /**
  * 指定した要素とその子孫のテキストノードを全て置換
  */
-export function replaceTextInElement(element: Element | Document): void {
+export function replaceTextInElement(element: Element | Document, currentUrl?: string): void {
   if (!isEnabled) return;
+  const url = currentUrl ?? window.location.href;
 
   const walker = document.createTreeWalker(
     element,
@@ -293,7 +283,7 @@ export function replaceTextInElement(element: Element | Document): void {
 
   let currentNode: Node | null;
   while ((currentNode = walker.nextNode())) {
-    replaceTextNode(currentNode as Text);
+    replaceTextNode(currentNode as Text, url);
   }
 }
 
@@ -306,7 +296,7 @@ export function replaceAll(): void {
     console.warn('[gittohabu] 置換対象のルート要素が見つかりません。');
     return;
   }
-  replaceTextInElement(rootElement);
+  replaceTextInElement(rootElement, window.location.href);
 }
 
 /**
