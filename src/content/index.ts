@@ -105,6 +105,9 @@ async function init(): Promise<void> {
   });
 
   document.addEventListener('mouseout', (e: MouseEvent) => {
+    if (!tooltipElement) {
+      return;
+    }
     const target = e.target;
     // Fix: Use Element instead of HTMLElement to support SVG children (icons)
     if (!(target instanceof Element)) {
