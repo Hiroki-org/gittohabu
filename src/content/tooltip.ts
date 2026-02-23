@@ -10,7 +10,7 @@ function createTooltipElement(): HTMLDivElement {
   return el;
 }
 
-function calculatePosition(anchor: HTMLElement, tooltip: HTMLElement): TooltipPosition {
+function calculatePosition(anchor: Element, tooltip: HTMLElement): TooltipPosition {
   const anchorRect = anchor.getBoundingClientRect();
   const tooltipRect = tooltip.getBoundingClientRect();
   const viewportWidth = window.innerWidth;
@@ -31,8 +31,6 @@ function calculatePosition(anchor: HTMLElement, tooltip: HTMLElement): TooltipPo
   if (top < TOOLTIP_OFFSET) {
     top = TOOLTIP_OFFSET;
   }
-
-  return { top, left };
 
   return { top, left };
 }
