@@ -31,10 +31,11 @@ function handleMouseOver(e: MouseEvent) {
     return;
   }
 
+  const currentUrl = window.location.href;
   for (const compiled of compiledEntries) {
     // URL pattern check
     if (compiled.urlPattern) {
-      if (!compiled.urlPattern.test(window.location.href)) {
+      if (!compiled.urlPattern.test(currentUrl)) {
         continue;
       }
     }
