@@ -5,7 +5,7 @@ export interface TooltipConfig {
   /** ツールチップのタイトル（オプション） */
   title?: string;
   /** 表示位置の基準要素 */
-  anchor: HTMLElement;
+  anchor: Element;
 }
 
 export interface TooltipPosition {

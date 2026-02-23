@@ -14,7 +14,7 @@ let lastUrl: string = '';
 
 let isEnabled = false;
 let currentLang = 'ja';
-let currentAnchor: HTMLElement | null = null;
+let currentAnchor: Element | null = null;
 
 export function setLanguage(lang: string): void {
   currentLang = lang;
@@ -56,7 +56,7 @@ function handleMouseOver(e: MouseEvent) {
   if (!(e.ctrlKey || e.metaKey)) return;
 
   const target = e.target;
-  if (!(target instanceof HTMLElement)) return;
+  if (!(target instanceof Element)) return;
 
   // Optimization: if we are already in currentAnchor, do nothing
   if (currentAnchor && currentAnchor.contains(target)) {
@@ -68,7 +68,7 @@ function handleMouseOver(e: MouseEvent) {
   if (!activeCombinedSelector) return;
 
   const match = target.closest(activeCombinedSelector);
-  if (!match || !(match instanceof HTMLElement)) return;
+  if (!match || !(match instanceof Element)) return;
 
   for (const compiled of activeEntries) {
     if (match.matches(compiled.entry.selector)) {
