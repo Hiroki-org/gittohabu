@@ -210,12 +210,11 @@ export function setLanguage(lang: string): void {
 export function replaceTextNode(node: Text, currentUrl?: string): void {
   if (!isEnabled) return;
 
-  // 元のテキストを保持（初回のみ）
-  if (!originalTextMap.has(node)) {
-    originalTextMap.set(node, node.textContent ?? '');
-  }
+  // 既に保持している場合はそれを使用、なければ現在のテキストを使用（まだ保存しない）
+  const originalText = originalTextMap.has(node)
+    ? originalTextMap.get(node)
+    : (node.textContent ?? '');
 
-  const originalText = originalTextMap.get(node);
   if (!originalText) return;
 
   let text = originalText;
@@ -242,6 +241,11 @@ export function replaceTextNode(node: Text, currentUrl?: string): void {
   }
 
   if (modified && text !== node.textContent) {
+    // 置換が発生した場合のみ、元のテキストを保存する
+    if (!originalTextMap.has(node)) {
+      originalTextMap.set(node, originalText);
+    }
+
     node.textContent = text;
     // 重複チェック：既にこのノードが追跡されているか確認
     const isAlreadyTracked = Array.from(replacedNodes).some((weakRef) => weakRef.deref() === node);
