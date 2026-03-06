@@ -21,7 +21,12 @@ export function setLanguage(lang: string): void {
 }
 
 function getLocalizedValue(text: { [key: string]: string }): string {
-  return text[currentLang] || text['en'] || Object.values(text)[0] || '';
+  if (text[currentLang]) return text[currentLang];
+  if (text['en']) return text['en'];
+  for (const key in text) {
+    if (text[key]) return text[key];
+  }
+  return '';
 }
 
 function isValidSelector(selector: string): boolean {
