@@ -140,8 +140,11 @@ const entryCache = new ReplacementCache();
 /** 元のテキストを保持するマップ (WeakMapでメモリリークを防ぐ) */
 const originalTextMap = new WeakMap<Text, string>();
 
-/** 置換済みのテキストノードを追跡 */
+/** 置換済みのテキストノードを追跡(全体巡回用) */
 const replacedNodes = new Set<WeakRef<Text>>();
+
+/** 置換済みテキストノードのO(1)重複チェック用 */
+let replacedNodeSet = new WeakSet<Text>();
 
 /** 置換が有効かどうか */
 let isEnabled = true;
@@ -210,12 +213,14 @@ export function setLanguage(lang: string): void {
 export function replaceTextNode(node: Text, currentUrl?: string): void {
   if (!isEnabled) return;
 
-  // 元のテキストを保持（初回のみ）
-  if (!originalTextMap.has(node)) {
-    originalTextMap.set(node, node.textContent ?? '');
+  // 初回のみ元のテキストを取得
+  let originalText = originalTextMap.get(node);
+  const isFirstTime = originalText === undefined;
+
+  if (isFirstTime) {
+    originalText = node.textContent ?? '';
   }
 
-  const originalText = originalTextMap.get(node);
   if (!originalText) return;
 
   let text = originalText;
@@ -241,11 +246,16 @@ export function replaceTextNode(node: Text, currentUrl?: string): void {
     }
   }
 
-  if (modified && text !== node.textContent) {
+  if (modified && text !== originalText) {
     node.textContent = text;
-    // 重複チェック：既にこのノードが追跡されているか確認
-    const isAlreadyTracked = Array.from(replacedNodes).some((weakRef) => weakRef.deref() === node);
-    if (!isAlreadyTracked) {
+    
+    // 変更が発生した場合のみ登録
+    if (isFirstTime) {
+      originalTextMap.set(node, originalText);
+    }
+    
+    if (!replacedNodeSet.has(node)) {
+      replacedNodeSet.add(node);
       replacedNodes.add(new WeakRef(node));
     }
   }
@@ -266,12 +276,12 @@ export function replaceTextInElement(element: Element | Document, currentUrl?: s
         // スクリプトやスタイル内は除外
         const parent = node.parentElement;
         if (!parent) return NodeFilter.FILTER_REJECT;
-        const tagName = parent.tagName.toLowerCase();
+        const tagName = parent.tagName;
         if (
-          tagName === 'script' ||
-          tagName === 'style' ||
-          tagName === 'textarea' ||
-          tagName === 'input' ||
+          tagName === 'SCRIPT' || tagName === 'script' ||
+          tagName === 'STYLE' || tagName === 'style' ||
+          tagName === 'TEXTAREA' || tagName === 'textarea' ||
+          tagName === 'INPUT' || tagName === 'input' ||
           parent.isContentEditable
         ) {
           return NodeFilter.FILTER_REJECT;
@@ -314,6 +324,7 @@ export function restoreAll(): void {
     }
   }
   replacedNodes.clear();
+  replacedNodeSet = new WeakSet<Text>();
   console.log('[gittohabu] テキストを元に戻しました');
 }
 
