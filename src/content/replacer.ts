@@ -266,12 +266,12 @@ export function replaceTextInElement(element: Element | Document, currentUrl?: s
         // スクリプトやスタイル内は除外
         const parent = node.parentElement;
         if (!parent) return NodeFilter.FILTER_REJECT;
-        const tagName = parent.tagName.toLowerCase();
+        const tagName = parent.tagName;
         if (
-          tagName === 'script' ||
-          tagName === 'style' ||
-          tagName === 'textarea' ||
-          tagName === 'input' ||
+          tagName === 'SCRIPT' ||
+          tagName === 'STYLE' ||
+          tagName === 'TEXTAREA' ||
+          tagName === 'INPUT' ||
           parent.isContentEditable
         ) {
           return NodeFilter.FILTER_REJECT;
