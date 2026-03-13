@@ -51,6 +51,11 @@ function flushPendingNodes(): void {
     return !hasPendingAncestor(node.parentNode);
   });
 
+  // 祖先要素の検証結果をキャッシュ（同じ親を持つ複数のテキストノード対策）
+  const parentClosestCache = new WeakMap<Element, boolean>();
+  let lastParent: Element | null = null;
+  let lastParentIsInvalid = false;
+
   for (const node of filteredNodes) {
     // 処理前に再度接続状態を確認
     if (!node.isConnected) continue;
@@ -60,12 +65,29 @@ function flushPendingNodes(): void {
     } else if (node.nodeType === Node.TEXT_NODE) {
       const textNode = node as Text;
       const parent = textNode.parentElement;
-      if (
-        parent &&
-        !parent.isContentEditable &&
-        !parent.closest('script,style,textarea,input')
-      ) {
-        replaceTextNode(textNode, currentUrl);
+
+      if (parent && !parent.isContentEditable) {
+        let isInvalidParent = false;
+
+        // 直前のノードと同じ親要素であればキャッシュヒット（最速パス）
+        if (parent === lastParent) {
+          isInvalidParent = lastParentIsInvalid;
+        } else {
+          // Mapキャッシュをチェック
+          let cached = parentClosestCache.get(parent);
+          if (cached === undefined) {
+            // 最も重い処理: DOMツリーを遡及
+            cached = parent.closest('script,style,textarea,input') !== null;
+            parentClosestCache.set(parent, cached);
+          }
+          isInvalidParent = cached;
+          lastParent = parent;
+          lastParentIsInvalid = isInvalidParent;
+        }
+
+        if (!isInvalidParent) {
+          replaceTextNode(textNode, currentUrl);
+        }
       }
     }
   }
