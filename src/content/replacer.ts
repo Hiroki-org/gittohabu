@@ -278,10 +278,10 @@ export function replaceTextInElement(element: Element | Document, currentUrl?: s
         if (!parent) return NodeFilter.FILTER_REJECT;
         const tagName = parent.tagName;
         if (
-          tagName === 'SCRIPT' || tagName === 'script' ||
-          tagName === 'STYLE' || tagName === 'style' ||
-          tagName === 'TEXTAREA' || tagName === 'textarea' ||
-          tagName === 'INPUT' || tagName === 'input' ||
+          tagName === 'SCRIPT' ||
+          tagName === 'STYLE' ||
+          tagName === 'TEXTAREA' ||
+          tagName === 'INPUT' ||
           parent.isContentEditable
         ) {
           return NodeFilter.FILTER_REJECT;
