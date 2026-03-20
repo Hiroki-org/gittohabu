@@ -66,12 +66,21 @@ function isLocalizedText(value: unknown): value is LocalizedText {
   return entries.length > 0 && entries.every(([, text]) => typeof text === 'string');
 }
 
+let cachedDictionary: Dictionary | null = null;
+let lastUserEntriesJson: string | null = null;
+
 /**
  * ビルトイン + ユーザ辞書をマージして返す
  * ユーザ辞書のエントリは同一IDでビルトインを上書き
  */
 export async function loadDictionary(): Promise<Dictionary> {
   const userEntries = await loadUserDictionary();
+  const currentJson = JSON.stringify(userEntries);
+
+  if (cachedDictionary && lastUserEntriesJson === currentJson) {
+    return cachedDictionary;
+  }
+
   const mergedMap = new Map<string, Dictionary['entries'][number]>();
 
   // ビルトインを先に登録
@@ -83,11 +92,14 @@ export async function loadDictionary(): Promise<Dictionary> {
     mergedMap.set(entry.id, entry);
   }
 
-  return {
+  cachedDictionary = {
     version: builtinDictionary.version,
     updatedAt: userEntries.length > 0 ? new Date().toISOString() : builtinDictionary.updatedAt,
     entries: Array.from(mergedMap.values()),
   };
+  lastUserEntriesJson = currentJson;
+
+  return cachedDictionary;
 }
 
 /**
