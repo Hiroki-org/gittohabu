@@ -9,6 +9,12 @@ type CompiledHoverEntry = {
 let compiledEntries: CompiledHoverEntry[] = [];
 // Cache for optimization
 let activeEntries: CompiledHoverEntry[] = [];
+
+type ChunkGroup = {
+  combinedSelector: string;
+  entries: CompiledHoverEntry[];
+};
+let activeChunkGroups: ChunkGroup[] = [];
 let activeCombinedSelector: string = '';
 let lastUrl: string = '';
 
@@ -49,6 +55,16 @@ function updateActiveEntries() {
     return true;
   });
 
+  activeChunkGroups = [];
+  const CHUNK_SIZE = 50;
+  for (let i = 0; i < activeEntries.length; i += CHUNK_SIZE) {
+    const slice = activeEntries.slice(i, i + CHUNK_SIZE);
+    activeChunkGroups.push({
+      combinedSelector: slice.map((c) => c.entry.selector).join(','),
+      entries: slice,
+    });
+  }
+
   activeCombinedSelector = activeEntries
     .map((c) => c.entry.selector)
     .join(',');
@@ -75,15 +91,19 @@ function handleMouseOver(e: MouseEvent) {
   const match = target.closest(activeCombinedSelector);
   if (!match || !(match instanceof Element)) return;
 
-  for (const compiled of activeEntries) {
-    if (match.matches(compiled.entry.selector)) {
-      currentAnchor = match;
-      showTooltip({
-        anchor: match,
-        title: getLocalizedValue(compiled.entry.title),
-        text: getLocalizedValue(compiled.entry.description),
-      });
-      return;
+  for (const chunk of activeChunkGroups) {
+    if (match.matches(chunk.combinedSelector)) {
+      for (const compiled of chunk.entries) {
+        if (match.matches(compiled.entry.selector)) {
+          currentAnchor = match;
+          showTooltip({
+            anchor: match,
+            title: getLocalizedValue(compiled.entry.title),
+            text: getLocalizedValue(compiled.entry.description),
+          });
+          return;
+        }
+      }
     }
   }
 }
@@ -131,6 +151,7 @@ export function setHoverEntries(entries: HoverEntry[]): void {
   lastUrl = '';
   activeCombinedSelector = '';
   activeEntries = [];
+  activeChunkGroups = [];
 }
 
 export function setHoverEnabled(enabled: boolean): void {
