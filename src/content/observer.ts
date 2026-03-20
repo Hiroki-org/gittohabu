@@ -12,8 +12,6 @@ function flushPendingNodes(): void {
   const currentPending = pendingNodes;
   pendingNodes = new Set<Node>();
 
-  const nodes = Array.from(currentPending);
-
   // 祖先要素のチェック結果をキャッシュするMap
   const ancestorCache = new Map<Node, boolean>();
 
@@ -41,19 +39,10 @@ function flushPendingNodes(): void {
     return result;
   }
 
-  // 祖先要素がcurrentPendingに含まれている場合は、親の処理でカバーされるため除外する
-  const filteredNodes = nodes.filter((node) => {
-    // 切断されたノードはスキップ
-    if (!node.isConnected) {
-      return false;
-    }
-    // 親から順に祖先をチェック
-    return !hasPendingAncestor(node.parentNode);
-  });
-
-  for (const node of filteredNodes) {
-    // 処理前に再度接続状態を確認
+  for (const node of currentPending) {
+    // 切断されたノードはスキップ（親のチェックより先に実行して不要な処理を回避）
     if (!node.isConnected) continue;
+    if (hasPendingAncestor(node.parentNode)) continue;
 
     if (node.nodeType === Node.ELEMENT_NODE) {
       replaceTextInElement(node as Element, currentUrl);
