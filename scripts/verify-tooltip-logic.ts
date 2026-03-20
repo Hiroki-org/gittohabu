@@ -84,8 +84,6 @@ if (!(anchor instanceof Element)) {
 }
 
 // Test 2: Check if anchor is detected as SVG parent correctly
-// In the original bug, checks were `instanceof HTMLElement`.
-// Here we verify `instanceof Element` works for SVG children.
 
 const isSVGSupported = (target instanceof Element) && (anchor instanceof Element);
 if (isSVGSupported) {
